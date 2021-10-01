@@ -86,7 +86,7 @@ function App() {
           </Route>
         </Switch>
 
-        <BurgerMenu isOpen={isBurgerMenuOpen} />
+        <BurgerMenu isOpen={isBurgerMenuOpen} onCloseBurger={closeAllPopups}/>
 
         <Route path="/(movies|saved-movies)">
           <Footer />

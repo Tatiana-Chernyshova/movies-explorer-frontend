@@ -2,7 +2,7 @@ import "./BurgerMenu.css";
 import { NavLink } from "react-router-dom";
 import NavigationAccount from "../NavigationAccount/NavigationAccount";
 
-function BurgerMenu({ isOpen }) {
+function BurgerMenu({ isOpen, onCloseBurger }) {
   return (
     <section className={`burger-menu burger-menu_${isOpen && "active"}`}>
       <div className="burger-menu__popup">
@@ -14,6 +14,7 @@ function BurgerMenu({ isOpen }) {
                 activeClassName="menu__link_active"
                 exact
                 to="/"
+                onClick={onCloseBurger}
               >
                 Главная
               </NavLink>
@@ -23,6 +24,7 @@ function BurgerMenu({ isOpen }) {
                 className="menu__link"
                 activeClassName="menu__link_active"
                 to="/movies"
+                onClick={onCloseBurger}
               >
                 Фильмы
               </NavLink>
@@ -32,13 +34,14 @@ function BurgerMenu({ isOpen }) {
                 className="menu__link"
                 activeClassName="menu__link_active"
                 to="/saved-movies"
+                onClick={onCloseBurger}
               >
                 Сохраненные фильмы
               </NavLink>
             </li>
           </ul>
         </section>
-        <NavigationAccount />
+        <NavigationAccount onCloseBurger={onCloseBurger}/>
       </div>
     </section>
   );
