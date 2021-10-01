@@ -1,0 +1,138 @@
+.search__page {
+  margin: 0 70px 11px;
+  padding: 70px 0 69px 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.search__box {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 196px;
+  border-radius: 9px;
+  background: #fdfdfd;
+  box-shadow: 0px 3px 14px rgba(0, 0, 0, 0.08);
+}
+
+.search {
+  padding: 16px 30px 19px 0;
+}
+
+.search__input-container {
+  margin: 0;
+  padding: 0 19px;
+  border: none;
+  display: grid;
+  grid-template-columns: 32px 1fr 80px;
+  grid-template-areas:
+    ". . ."
+    ". error .";
+  grid-column-gap: 10px;
+  justify-items: start;
+  align-items: center;
+  height: 34px;
+  border-right: 1px solid #cbcbcb;
+}
+
+.search__input {
+  font-size: 18px;
+  color: #000000;
+  border: none;
+  background: #fdfdfd;
+  width: 100%;
+}
+
+.search__input::placeholder {
+  color: #a0a0a0;
+}
+
+.search__input:focus {
+  outline: none;
+}
+
+.search__input-error {
+  font-size: 10px;
+  color: #ff4062;
+  grid-area: error;
+}
+
+.search__submit {
+  border: none;
+  cursor: pointer;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 48px;
+  font-weight: 500;
+  font-size: 11px;
+  justify-self: end;
+  transition: opacity 0.2s linear 0s;
+  width: 58.65px;
+  height: 34px;
+}
+
+.search__submit:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 1279px) {
+  .search__page {
+    max-width: 752px;
+    margin: 0 auto 11px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .search__page {
+    margin: 0 30px 11px;
+    padding: 74px 0 109px;
+  }
+  .search__box {
+    padding-right: 30px;
+    grid-template-columns: 1fr 188px;
+
+  }
+  .search {
+    margin: 0 0 0 20px;
+    padding: 19px 19px 19px 0;
+  }
+  .search__input-container {
+    padding: 0 19px 0 0;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .search__page {
+    padding: 74px 10px 109px;
+    margin: 0 10px 11px;
+  }
+  .search {
+    padding: 0;
+  }
+  .search__box {
+    padding: 0;
+    position: relative;
+    grid-template-columns: 1fr;
+  }
+  .search__input-container {
+    padding: 19px;
+    grid-template-columns: 1fr 80px;
+    grid-template-areas:
+      ". ."
+      "error .";
+    border-right: none;
+  }
+  .search__icon {
+    display: none;
+  }
+  .search__input {
+    font-size: 14px;
+  }
+  
+}
+@media screen and (max-width: 340px) {
+  .search__page {
+    padding: 75px 0 109px;
+  }
+  .search__input-container {
+    padding-left: 0;
+  }
+}

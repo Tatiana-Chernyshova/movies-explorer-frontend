@@ -1,0 +1,48 @@
+.burger__btn {
+  border: 0;
+  padding: 9px 8px;
+  margin: 0;
+  width: 44px;
+  height: 44px;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.4s linear 0s;
+}
+
+.burger__icon {
+  width: 100%;
+  background-size: contain;
+}
+
+.burger__btn:hover {
+  opacity: 0.6;
+}
+
+.burger__btn_close {
+  z-index: 2;
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 32px;
+  padding: 0;
+}
+
+@media screen and (min-width: 769px) {
+  .burger__btn {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .burger__btn {
+    width: 40px;
+    height: 43px;
+    padding: 12.5px 9px;
+  }
+  .burger__btn_close {
+    top: 10px;
+    right: 13px;
+    width: 32px;
+    padding: 0;
+  }
+}

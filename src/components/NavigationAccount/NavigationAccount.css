@@ -1,0 +1,31 @@
+.account__box {
+  margin: 0;
+  width: 100px;
+  height: 32px;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: 2px solid #aaaaaa;
+  border-radius: 50px;
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  grid-column-gap: 7px;
+  justify-content: center;
+  align-content: center;
+  transition: opacity 0.2s linear 0s;
+}
+
+.account__box:hover {
+  opacity: 0.6;
+}
+
+.account__icon {
+  height: 14px;
+}
+
+.account__text {
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: black;
+}

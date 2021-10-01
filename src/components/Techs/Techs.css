@@ -1,0 +1,119 @@
+.techs {
+  background-color: #f9f9f9;
+}
+
+.techs__content {
+  margin: 0 70px;
+  font-style: normal;
+  padding: 100px 0;
+}
+
+.techs__component {
+  margin: 0;
+  padding-bottom: 23px;
+  font-weight: normal;
+  font-size: 22px;
+  line-height: 27px;
+  border-bottom: 1px solid #000000;
+}
+
+.techs__box {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: max-content;
+}
+
+.techs__title {
+  margin: 0;
+  padding-top: 90px;
+  font-weight: normal;
+  font-size: 50px;
+  line-height: 58px;
+  text-align: center;
+}
+
+.techs__subtitle {
+  margin: 0;
+  padding: 26px 14px 0;
+  max-width: 460px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  justify-self: center;
+}
+
+.techs__items {
+  padding: 100px 0 0;
+  margin: 0;
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 90px);
+  grid-gap: 10px;
+  justify-content: center;
+}
+
+.techs__item {
+  margin: 0;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  background: #e8e8e8;
+  text-align: center;
+  height: 60px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.techs__item:hover {
+  background: radial-gradient(circle, rgba(232,232,232,1) 57%, rgba(200,200,200,1) 88%);
+  transition: all 0.4s ease-in-out 10s;
+}
+
+@media screen and (max-width: 829px) {
+  .techs__content {
+    margin: 0 50px;
+    padding: 90px 0;
+  }
+  .techs__title {
+    padding-top: 80px;
+  }
+  .techs__subtitle {
+    padding-top: 22px;
+    font-size: 12px;
+  }
+  .techs__items {
+    padding-top: 83px;
+    grid-template-columns: repeat(auto-fit, 84px);
+  }
+  .techs__item {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 465px) {
+  .techs {
+    background-color: white;
+  }
+  .techs__content {
+    margin: 0 18px;
+    padding: 70px 0;
+  }
+  .techs__component {
+    font-size: 18px;
+  }
+  .techs__title {
+    padding-top: 60px;
+    font-size: 30px;
+  }
+  .techs__subtitle {
+    padding-top: 24px;
+    font-size: 11px;
+  }
+  .techs__items {
+    padding-top: 50px;
+    grid-template-columns: repeat(2, 84px);
+  }
+}

@@ -1,0 +1,54 @@
+.header {
+  padding: 18px 70px 18px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10px, 1fr));
+  align-items: center;
+  justify-items: end;
+}
+
+.header_auth {
+  padding: 70px 0 0;
+  max-width: 396px;
+  display: block;
+}
+
+.header__link {
+  justify-self: start;
+  transition: opacity 0.2s linear 0s;
+}
+
+.header__link:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 1279px) {
+  .header_login {
+    max-width: 752px;
+  }
+}
+
+@media screen and (max-width: 829px) {
+  .header_auth {
+    padding: 232px 0 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 18px 30px 18px;
+  }
+  .header_auth {
+    padding: 232px 0 0;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .header {
+    padding: 18px 14px 18px;
+  }
+  .header_auth {
+    padding: 56px 0 0;
+    max-width: 38px;
+  }
+}
