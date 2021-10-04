@@ -3,16 +3,27 @@ import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import searchIcon from "../../images/icon__seach.svg";
 
-function SearchForm() {
-  const [name, setName] = React.useState("");
+function SearchForm({ setSearch, movies, handleSearch }) {
+  const [film, setFilm] = React.useState("");
 
   function submit(e) {
     e.preventDefault();
+    // console.log("submit seach")
+    console.log(film)
+    // setSearch(film);
+    handleSearch(film);
   }
 
   function handleChangeName(e) {
-    setName(e.target.value);
+    setFilm(e.target.value);
   }
+
+
+  // const [searchData, setSearchData] = React.useState('');
+  // const handleInputChange = (e) => {
+  //   setSearchData(e.target.value);
+  // };
+  // console.log(searchData)
 
   return (
     <article className="search__page">
@@ -27,11 +38,12 @@ function SearchForm() {
               name="film"
               placeholder="Фильм"
               // value={email || ''}
-              value={name || ""}
+              value={film || ""}
               required
               // onChange={handleEmailChange}
-              minLength="5"
+              // minLength="5"
               onChange={handleChangeName}
+              // onChange={handleInputChange}
             />
             <span className="film-error search__input-error"></span>
             <button

@@ -39,6 +39,11 @@
   border: none;
   background: #fdfdfd;
   width: 100%;
+  transition: opacity 0.3s ease-in-out 0s;
+}
+
+.search__input:hover {
+  opacity: 0.5;
 }
 
 .search__input::placeholder {

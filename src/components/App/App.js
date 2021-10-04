@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 // import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import { Route, Switch } from "react-router-dom";
 // import ProtectedRoute from "./ProtectedRoute";
 // import { Route } from "react-router-dom";
+// import CurrentUserContext from "../../contexts/CurrentUserContext";
+import api from "../../utils/MoviesApi.js";
+// import * as api from "../../utils/api.js";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
@@ -22,6 +26,8 @@ import "../../vendor/font.css";
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(true);
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
+  const [movies, setMovies] = React.useState([]);
+
 
   function handleLogin() {
     setLoggedIn(true);
@@ -32,6 +38,25 @@ function App() {
   function closeAllPopups() {
     setIsBurgerMenuOpen(false);
   }
+
+
+
+  
+  function allMovies() {
+    api.getMovies()
+      .then((moviesData) => {
+        setMovies(moviesData);
+    })
+      .catch(e => { console.log(e) });
+  }
+  React.useEffect(() => {
+    allMovies();
+    // console.log(movies);
+  }, 
+  [isBurgerMenuOpen]
+  )
+// console.log(movies);
+
   useEffect(() => {});
 
   return (
@@ -65,6 +90,7 @@ function App() {
 
           <Route path="/movies">
             <Movies
+              movies={movies}
             // onSubmit={handleLogin}
             />
           </Route>
