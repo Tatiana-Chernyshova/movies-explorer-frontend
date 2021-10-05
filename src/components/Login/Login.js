@@ -1,7 +1,15 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import AuthForm from "../AuthForm/AuthForm";
 
 function Login({ onSubmit }) {
+  const {
+    register,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange"
+  });
+
   return (
     <AuthForm
       title="Рады видеть!"
@@ -10,6 +18,7 @@ function Login({ onSubmit }) {
       link="/signup"
       linkText="Регистрация"
       onSubmit={onSubmit}
+      isValid={isValid}
     >
       <div className="auth__item">
       <label className="auth__label" htmlFor="email">
@@ -24,9 +33,15 @@ function Login({ onSubmit }) {
         // value={email || ''}
         required
         // onChange={handleEmailChange}
-        minLength="4"
+        {...register("email", { required: "Это обязательное поле" ,
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: "Неверный формат email",
+        }})}
       />
-      <span className="auth__error"></span>
+      {errors.email && (
+        <span className="auth__error">{errors.email.message}</span>
+      )}
       </div>
       <div className="auth__item">
       <label className="auth__label" htmlFor="password">
@@ -42,8 +57,17 @@ function Login({ onSubmit }) {
         required
         // onChange={handlePasswordChange}
         minLength="8"
+        {...register("password", {
+          required: "Необходимо ввести пароль",
+          minLength: {
+            value: 8,
+            message: "Минимальная длина пароля должна быть 8 символов",
+          }
+        })}
       />
-      <span className="auth__error"></span>
+      {errors.password && (
+        <span className="auth__error">{errors.password.message}</span>
+      )}
       </div>
     </AuthForm>
   );
