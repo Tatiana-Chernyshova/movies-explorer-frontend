@@ -16,7 +16,7 @@ function App() {
     reset();
   };
 
-  TODO: delete
+  // TODO: delete
   // TODO: delete
   // console.log(watch());
 

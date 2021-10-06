@@ -78,7 +78,7 @@
   opacity: 0.6;
 }
 
-/* TODO: delete*/
+/* TODO: delete */
 .search__submit:disabled {
   opacity: 0.4;
   /* cursor: ; */
