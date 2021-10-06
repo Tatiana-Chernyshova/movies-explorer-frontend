@@ -14,7 +14,7 @@ function Profile({ onSubmit, userData }) {
     mode: "onChange"
   });
 
-  // const [currentUser, setCurrentUser] = React.useState({ name: 'Алёша' });
+  // const [currentUser, setCurrentUser]  = React.useState({ name: 'Алёша' });
 
   // const onSubmit = (data) => {
   //   console.log(data);
