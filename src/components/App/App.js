@@ -5,7 +5,7 @@ import "./App.css";
 import { Route, Switch } from "react-router-dom";
 // import ProtectedRoute from "./ProtectedRoute";
 // import { Route } from "react-router-dom";
-// import CurrentUserContext from "../../contexts/CurrentUserContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import api from "../../utils/MoviesApi.js";
 // import * as api from "../../utils/api.js";
 import Header from "../Header/Header";
@@ -25,6 +25,8 @@ import "../../vendor/font.css";
 
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(true);
+  // const [currentUser, setCurrentUser] = React.useState({});
+  const [currentUser, setCurrentUser] = React.useState("Dkflbvbh");
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
   const [movies, setMovies] = React.useState([]);
 
@@ -60,6 +62,7 @@ function App() {
   useEffect(() => {});
 
   return (
+    <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
       <div className="page__container">
         <Header
@@ -85,6 +88,7 @@ function App() {
           <Route path="/profile">
             <Profile
             // onSubmit={handleLogin}
+            userData={currentUser}
             />
           </Route>
 
@@ -119,6 +123,7 @@ function App() {
         </Route>
       </div>
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 

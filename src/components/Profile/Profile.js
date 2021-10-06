@@ -1,9 +1,10 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import { useForm } from "react-hook-form";
+// import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import "./Profile.css";
 
-function Profile({ onSubmit }) {
+function Profile({ onSubmit, userData }) {
   const {
     register,
     handleSubmit,
@@ -12,6 +13,8 @@ function Profile({ onSubmit }) {
   } = useForm({
     mode: "onChange"
   });
+
+  // const [currentUser, setCurrentUser] = React.useState({ name: 'Алёша' });
 
   // const onSubmit = (data) => {
   //   console.log(data);
@@ -22,7 +25,7 @@ function Profile({ onSubmit }) {
     <Route path="/profile">
       <article className="profile__page">
         <form className="profile" name="profile" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <h2 className="profile__heading">{`Привет, ${"Вла"}!`}</h2>
+          <h2 className="profile__heading">{`Привет, ${userData}!`}</h2>
           <fieldset className="profile__input-container">
             <div className="profile__box">
               <label className="profile__label" htmlFor="name">
@@ -34,7 +37,7 @@ function Profile({ onSubmit }) {
                 id="name"
                 name="name"
                 placeholder="Имя"
-                // value={email || ''}
+                value={userData || ''}
                 // value="Владимир"
                 // required
                 // onChange={handleEmailChange}

@@ -45,6 +45,16 @@ function MoviesCardList({ buttonLikeClass, movies, search }) {
           />
           
         ))}
+        {/* {movies.map((obj) => (
+          <MoviesCard
+            movie={obj}
+            key={obj.id}
+            // olo={console.log(obj)}
+          />
+          
+        ))}
+
+arr.slice(1, 3) */}
 {/* 
 {b.map((obj) => (
           <MoviesCard

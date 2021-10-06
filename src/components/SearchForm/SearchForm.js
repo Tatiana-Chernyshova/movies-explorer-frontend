@@ -5,26 +5,30 @@ import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import searchIcon from "../../images/icon__seach.svg";
 
 function SearchForm({ setSearch, movies, handleSearch }) {
-  const [film, setFilm] = React.useState("");
+  // const [query, setQuery] = React.useState("");
 
   const {
     register,
+    handleSubmit,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange"
   });
 
-  function submit(e) {
-    e.preventDefault();
+  function onSubmit(e) {
+    // e.preventDefault();
     // console.log("submit seach")
-    console.log(film)
+    // console.log(query);
+    // console.log(e.query);
+    // setQuery(e);
+
     // setSearch(film);
-    handleSearch(film);
+    handleSearch(e.query);
   }
 
-  function handleChangeName(e) {
-    setFilm(e.target.value);
-  }
+  // function handleChangeQuery(e) {
+  //   setQuery(e.target.value);
+  // }
 
 
   // const [searchData, setSearchData] = React.useState('');
@@ -36,23 +40,23 @@ function SearchForm({ setSearch, movies, handleSearch }) {
   return (
     <article className="search__page">
       <div className="search__box">
-        <form className="search" name="search" onSubmit={submit}>
+        <form className="search" name="search" onSubmit={handleSubmit(onSubmit)}>
           <fieldset className="search__input-container">
             <img src={searchIcon} alt="Лупа" className="search__icon" />
             <input
               type="text"
               className="search__input"
-              id="film"
-              name="film"
+              id="query"
+              name="query"
               placeholder="Фильм"
               // value={email || ''}
-              value={film || ""}
+              // value={film || ""}
               required
               // onChange={handleEmailChange}
               // minLength="5"
-              onChange={handleChangeName}
+              // onChange={handleChangeQuery}
               // onChange={handleInputChange}
-              {...register("film", {
+              {...register("query", {
                 required: "Необходимо ввести запрос",
                 minLength: {
                   value: 2,
@@ -64,10 +68,10 @@ function SearchForm({ setSearch, movies, handleSearch }) {
                 }
               })}
             />
-            {errors.film && (
-              <span className="film-error search__input-error">{errors.film.message}</span>
+            {errors.query && (
+              <span className="query-error search__input-error">{errors.query.message}</span>
             )}
-            {/* <span className="film-error search__input-error"></span> */}
+            {/* <span className="query-error search__input-error"></span> */}
             <button
               type="submit"
               className="search__submit"
