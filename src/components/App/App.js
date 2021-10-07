@@ -7,7 +7,7 @@ import { Route, Switch } from "react-router-dom";
 // import { Route } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import api from "../../utils/MoviesApi.js";
-// import * as api from "../../utils/api.js";
+import * as auth from "../../utils/MainApi";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
@@ -24,15 +24,16 @@ import "../../vendor/normalize.css";
 import "../../vendor/font.css";
 
 function App() {
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   // const [currentUser, setCurrentUser] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState("Dkflbvbh");
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
   const [movies, setMovies] = React.useState([]);
+  const [token, setToken] = React.useState('');
 
 
   function handleLogin() {
-    setLoggedIn(true);
+    // setLoggedIn(true);
   }
   function handleIsBurgerMenuOpen() {
     setIsBurgerMenuOpen(true);
@@ -41,7 +42,100 @@ function App() {
     setIsBurgerMenuOpen(false);
   }
 
+  function handleRegister(e) {
+const {password, email, name} = e;
+// console.log(password);
+// console.log(email);
+// console.log(name)
 
+    auth.register(password, email, name)
+        .then((res) => {
+            // history.push('/singin');
+            
+            // setInfoTooltip({
+            //     message: 'Вы успешно зарегистрировались!',
+            //     image: infoTooltipSuccess
+            // });
+            // setInfoPopupOpen(true);
+            console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+            // setInfoTooltipFail();
+            // setInfoPopupOpen(true);
+        })
+  }
+
+  function handleLogin(e, token) {
+    const {password, email} = e;
+    // console.log(password);
+    // console.log(email);
+    // console.log(token);
+    auth.login(password, email, token)
+        .then((res) => {
+          if (res) {
+            localStorage.setItem('token', res.token)
+            // setCurrentUserEmail(email);
+            setLoggedIn(true);
+            // history.push('/');
+            // setInfoTooltip({
+            //     message: 'Вы успешно авторизовались!',
+            //     image: infoTooltipSuccess
+            // });
+            // setInfoPopupOpen(true);
+        }
+    })
+    .catch(() => {
+        // setInfoTooltipFail();
+        // setInfoPopupOpen(true);
+        })
+  }
+
+  function checkToken() {
+    setToken(localStorage.getItem('token'));
+
+    if (token) {
+      // setToken(token);
+      auth.getToken(token)
+        .then(res => {
+          // setCurrentUserEmail(res.email)
+          setLoggedIn(true)
+        })
+        .catch(e => { console.log(e) }) 
+    }
+  }
+
+  // function handleSignOut() {
+  //   localStorage.removeItem('token')
+  //   setLoggedIn(false);
+  //   setCurrentUserEmail('');
+  //   history.push('/signin');
+  //   setToken("");
+  // }
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      // history.push('/')
+      // Promise.all([api.getUserData(), api.getCards()])
+      // .then(([userData, cardsData]) => {
+      //   setCurrentUser(userData);
+      //   setCards(cardsData.reverse());
+      // })
+      // .catch(e => { console.log(e) })
+
+      auth.getUserData()
+      .then((userData) => {
+        setCurrentUser(userData);
+      })
+      .catch(e => { console.log(e) })
+    }
+    
+  // }, [loggedIn, history])
+}, [loggedIn])
+
+  React.useEffect(() => { 
+    checkToken();
+  }) 
 
   
   function allMovies() {
@@ -75,13 +169,13 @@ function App() {
         <Switch>
           <Route path="/signup">
             <Register
-            // onSubmit={handleRegister}
+            onSubmit={handleRegister}
             />
           </Route>
 
           <Route path="/signin">
             <Login
-            // onSubmit={handleLogin}
+            onSubmit={handleLogin}
             />
           </Route>
 

@@ -29,8 +29,8 @@ function MoviesCardList({ buttonLikeClass, movies, search }) {
     //   return setDisBtn(true);
     // }
     // return setDisBtn(true)
-    const isLastPage = endIndex === moviesShown.length;
-    setDisBtn(isLastPage);
+    // const isLastPage = endIndex === moviesShown.length;
+    // setDisBtn(isLastPage);
   };
 
 //   const startIndex = 0 * more;

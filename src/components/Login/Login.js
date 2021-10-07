@@ -1,14 +1,14 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 import AuthForm from "../AuthForm/AuthForm";
 
 function Login({ onSubmit }) {
-  const {
-    register,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: "onChange"
-  });
+  // const {
+  //   register,
+  //   formState: { errors, isValid },
+  // } = useForm({
+  //   mode: "onChange"
+  // });
 
   return (
     <AuthForm
@@ -18,9 +18,10 @@ function Login({ onSubmit }) {
       link="/signup"
       linkText="Регистрация"
       onSubmit={onSubmit}
-      isValid={isValid}
+      // isValid={isValid}
+      registration={false}
     >
-      <div className="auth__item">
+      {/* <div className="auth__item">
       <label className="auth__label" htmlFor="email">
         E-mail
       </label>
@@ -68,7 +69,7 @@ function Login({ onSubmit }) {
       {errors.password && (
         <span className="auth__error">{errors.password.message}</span>
       )}
-      </div>
+      </div> */}
     </AuthForm>
   );
 }
