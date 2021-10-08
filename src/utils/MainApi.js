@@ -48,6 +48,31 @@ export const getUserData = () => {
   .then(result => checkResponse(result));
 };
 
+export const setUserData = (email, name) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    },
+    body: JSON.stringify({email, name})
+  })
+  .then(result => checkResponse(result));
+};
+
+// setUserData(data) {
+//   return fetch(`${this._address}/users/me`, {
+//     method: 'PATCH',
+//     headers: this._headers,
+//     credentials: 'include',
+//     body: JSON.stringify({
+//       name: data.name,
+//       about: data.about
+//     })
+//   })
+//   .then(this._checkResponse)
+// }
+
 // getUserData() {
 //   return fetch(`${this._address}/users/me`, {
 //     // headers: this._headers,

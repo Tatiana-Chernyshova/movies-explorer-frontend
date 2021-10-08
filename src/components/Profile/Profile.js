@@ -1,31 +1,53 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import { useForm } from "react-hook-form";
-// import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import CurrentUserContext from '../../contexts/CurrentUserContext';
 import "./Profile.css";
 
-function Profile({ onSubmit, userData }) {
+function Profile({ onSubmit, userData, onSignOut }) {
+  const currentUser = React.useContext(CurrentUserContext);
+  // const { name, email } = currentUser.user
+
+  const preloadedValues = {
+    name: "name",
+    // email: email
+    // name: "name"
+  }
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
     // reset,
   } = useForm({
-    mode: "onChange"
+    mode: "onChange",
+    defaultValues: preloadedValues,
   });
 
   // const [currentUser, setCurrentUser]  = React.useState({ name: 'Алёша' });
 
-  // const onSubmit = (data) => {
+  // const onSubmitD = (data) => {
   //   console.log(data);
-  //   reset();
+  //   // reset();
   // };
 
+  
+
+
+// console.log(currentUser.user.name)
+// console.log(currentUser.user.email)
+
+// console.log(name)
   return (
     <Route path="/profile">
       <article className="profile__page">
-        <form className="profile" name="profile" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <h2 className="profile__heading">{`Привет, ${userData}!`}</h2>
+        <form className="profile" name="profile" 
+        // onSubmit={handleSubmit(onSubmitD)}
+        // onSubmit={handleSubmit((data) => onSubmit(data))}
+         noValidate>
+          <h2 className="profile__heading">
+            {/* {`Привет, ${name}!`} */}
+            {/* {currentUser && currentUser.user.name} */}
+            </h2>
           <fieldset className="profile__input-container">
             <div className="profile__box">
               <label className="profile__label" htmlFor="name">
@@ -37,7 +59,7 @@ function Profile({ onSubmit, userData }) {
                 id="name"
                 name="name"
                 placeholder="Имя"
-                value={userData || ''}
+                // value={currentUser.user.name || ''}
                 // value="Владимир"
                 // required
                 // onChange={handleEmailChange}
@@ -85,7 +107,7 @@ function Profile({ onSubmit, userData }) {
               <button className="profile__btn" 
               disabled={!isValid}
               >Редактировать</button>
-              <button className="profile__btn profile__btn_red">
+              <button className="profile__btn profile__btn_red" onClick={onSignOut}>
                 Выйти из аккаунта
               </button>
             </div>

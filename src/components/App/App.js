@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 // import { Route, Switch, Redirect, useHistory } from "react-router-dom";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 // import ProtectedRoute from "./ProtectedRoute";
 // import { Route } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
@@ -26,21 +26,44 @@ import "../../vendor/font.css";
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   // const [currentUser, setCurrentUser] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState("Dkflbvbh");
+  const [currentUser, setCurrentUser] = React.useState({});
+  const history = useHistory();
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
   const [movies, setMovies] = React.useState([]);
   const [token, setToken] = React.useState('');
 
 
-  function handleLogin() {
-    // setLoggedIn(true);
-  }
+  // function handleLogin() {
+  //   // setLoggedIn(true);
+  // }
   function handleIsBurgerMenuOpen() {
     setIsBurgerMenuOpen(true);
   }
   function closeAllPopups() {
     setIsBurgerMenuOpen(false);
   }
+
+
+  // function handleUpdateUser(el) {
+  //   const {email, name} = el;
+  //   auth.setUserData(el)
+  //     .then(res => {
+  //       setCurrentUser(res);
+  //       closeAllPopups();
+  //     })
+  //     .catch(e => { console.log(e) })  
+  // }
+
+  function handleUpdateUser(el) {
+    const {email, name} = el;
+    auth.setUserData(email, name)
+      .then(res => {
+        setCurrentUser(res);
+        // closeAllPopups();
+      })
+      .catch(e => { console.log(e) })  
+  }
+
 
   function handleRegister(e) {
 const {password, email, name} = e;
@@ -50,7 +73,7 @@ const {password, email, name} = e;
 
     auth.register(password, email, name)
         .then((res) => {
-            // history.push('/singin');
+            history.push('/singin');
             
             // setInfoTooltip({
             //     message: 'Вы успешно зарегистрировались!',
@@ -70,14 +93,14 @@ const {password, email, name} = e;
     const {password, email} = e;
     // console.log(password);
     // console.log(email);
-    // console.log(token);
+    console.log(token);
     auth.login(password, email, token)
         .then((res) => {
           if (res) {
             localStorage.setItem('token', res.token)
             // setCurrentUserEmail(email);
             setLoggedIn(true);
-            // history.push('/');
+            history.push('/');
             // setInfoTooltip({
             //     message: 'Вы успешно авторизовались!',
             //     image: infoTooltipSuccess
@@ -95,7 +118,7 @@ const {password, email, name} = e;
     setToken(localStorage.getItem('token'));
 
     if (token) {
-      // setToken(token);
+      setToken(token);
       auth.getToken(token)
         .then(res => {
           // setCurrentUserEmail(res.email)
@@ -105,17 +128,17 @@ const {password, email, name} = e;
     }
   }
 
-  // function handleSignOut() {
-  //   localStorage.removeItem('token')
-  //   setLoggedIn(false);
-  //   setCurrentUserEmail('');
-  //   history.push('/signin');
-  //   setToken("");
-  // }
-
+  function handleSignOut() {
+    localStorage.removeItem('token')
+    setLoggedIn(false);
+    setCurrentUser({});
+    history.push('/signin');
+    setToken("");
+  }
+// console.log(token)
   React.useEffect(() => {
     if (loggedIn) {
-      // history.push('/')
+      history.push('/movies')
       // Promise.all([api.getUserData(), api.getCards()])
       // .then(([userData, cardsData]) => {
       //   setCurrentUser(userData);
@@ -152,7 +175,7 @@ const {password, email, name} = e;
   [isBurgerMenuOpen]
   )
 // console.log(movies);
-
+console.log(currentUser);
   useEffect(() => {});
 
   return (
@@ -182,7 +205,9 @@ const {password, email, name} = e;
           <Route path="/profile">
             <Profile
             // onSubmit={handleLogin}
-            userData={currentUser}
+            // userData={currentUser}
+            onUpdateUser={handleUpdateUser}
+            onSignOut={handleSignOut}
             />
           </Route>
 
