@@ -4,13 +4,19 @@ import { useForm } from "react-hook-form";
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import "./Profile.css";
 
-function Profile({ onSubmit, userData, onSignOut }) {
-  const currentUser = React.useContext(CurrentUserContext);
+function Profile({ onUpdateUser, userData, onSignOut }) {
+  // const currentUser = React.useContext(CurrentUserContext);
   // const { name, email } = currentUser.user
+  const { user: { name=50, email=60 } } = React.useContext(CurrentUserContext);
+  
+  // const { name, email } = currentUser
+  // const [name, setName] = React.useState('');
+  // console.log(name);
+  
 
   const preloadedValues = {
-    name: "name",
-    // email: email
+    name: name,
+    email: email
     // name: "name"
   }
   const {
@@ -26,14 +32,21 @@ function Profile({ onSubmit, userData, onSignOut }) {
   // const [currentUser, setCurrentUser]  = React.useState({ name: 'Алёша' });
 
   // const onSubmitD = (data) => {
-  //   console.log(data);
+  //   // console.log(data);
+  //   // onUpdateUser(data);
   //   // reset();
   // };
 
   
-
-
-// console.log(currentUser.user.name)
+//   React.useEffect(() => {
+//     // setName(currentUser.user.name);
+//     // setDescription(currentUser.about);
+//     console.log(name);
+//     // console.log(currentUser.user.name);
+//   }, [currentUser]); 
+//   // console.log(name)
+// console.log(currentUser)
+// console.log(userData)
 // console.log(currentUser.user.email)
 
 // console.log(name)
@@ -42,7 +55,7 @@ function Profile({ onSubmit, userData, onSignOut }) {
       <article className="profile__page">
         <form className="profile" name="profile" 
         // onSubmit={handleSubmit(onSubmitD)}
-        // onSubmit={handleSubmit((data) => onSubmit(data))}
+        onSubmit={handleSubmit((data) => onUpdateUser(data))}
          noValidate>
           <h2 className="profile__heading">
             {/* {`Привет, ${name}!`} */}

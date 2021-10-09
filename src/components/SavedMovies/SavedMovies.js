@@ -6,7 +6,7 @@ function SavedMovies() {
   return (
     <>
       <SearchForm />
-      <MoviesCardList buttonLikeClass="card__like_delete" />
+      {/* <MoviesCardList buttonLikeClass="card__like_delete" /> */}
     </>
   );
 }

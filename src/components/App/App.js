@@ -55,10 +55,18 @@ function App() {
   // }
 
   function handleUpdateUser(el) {
-    const {email, name} = el;
+    // const { user } = el
+    const { email, name} = el;
+    // const { user: { name, email } } = el;
+    // console.log(el);
+    // // console.log(user);
+    // console.log(name)
+    // console.log(email)
+    // const {email, name} = el;
     auth.setUserData(email, name)
       .then(res => {
-        setCurrentUser(res);
+        console.log(res)
+        // setCurrentUser({ user: res });
         // closeAllPopups();
       })
       .catch(e => { console.log(e) })  
@@ -149,6 +157,7 @@ const {password, email, name} = e;
       auth.getUserData()
       .then((userData) => {
         setCurrentUser(userData);
+        console.log(userData);
       })
       .catch(e => { console.log(e) })
     }
@@ -175,7 +184,7 @@ const {password, email, name} = e;
   [isBurgerMenuOpen]
   )
 // console.log(movies);
-console.log(currentUser);
+// console.log(currentUser);
   useEffect(() => {});
 
   return (
@@ -205,7 +214,7 @@ console.log(currentUser);
           <Route path="/profile">
             <Profile
             // onSubmit={handleLogin}
-            // userData={currentUser}
+            userData={currentUser}
             onUpdateUser={handleUpdateUser}
             onSignOut={handleSignOut}
             />

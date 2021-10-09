@@ -50,11 +50,13 @@ export const getUserData = () => {
 
 export const setUserData = (email, name) => {
   return fetch(`${BASE_URL}/users/me`, {
+    // mode: 'no-cors',
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
+        credentials: 'include',
     body: JSON.stringify({email, name})
   })
   .then(result => checkResponse(result));
