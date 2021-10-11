@@ -24,14 +24,17 @@ import "../../vendor/normalize.css";
 import "../../vendor/font.css";
 
 function App() {
-  const [loggedIn, setLoggedIn] = React.useState(false);
+
+  const [loggedIn, setLoggedIn] = React.useState(true);
   // const [currentUser, setCurrentUser] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const history = useHistory();
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
   const [movies, setMovies] = React.useState([]);
-  const [token, setToken] = React.useState('');
-
+  // const [findMovies, setFindMovies] = React.useState([]);
+  const [token, setToken] = React.useState("");
+  // const [earch, setSearch] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   // function handleLogin() {
   //   // setLoggedIn(true);
@@ -42,7 +45,19 @@ function App() {
   function closeAllPopups() {
     setIsBurgerMenuOpen(false);
   }
-
+  function filterItems(search) {
+    const movies = JSON.parse(localStorage.getItem("movies"));
+    console.log(movies);
+    return movies.filter(function (elem) {
+      if (elem.country === search || elem.nameRU === search) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    // })
+  }
+  // filterItems(search)
 
   // function handleUpdateUser(el) {
   //   const {email, name} = el;
@@ -51,206 +66,255 @@ function App() {
   //       setCurrentUser(res);
   //       closeAllPopups();
   //     })
-  //     .catch(e => { console.log(e) })  
+  //     .catch(e => { console.log(e) })
   // }
 
   function handleUpdateUser(el) {
-    // const { user } = el
-    const { email, name} = el;
-    // const { user: { name, email } } = el;
-    // console.log(el);
-    // // console.log(user);
-    // console.log(name)
-    // console.log(email)
-    // const {email, name} = el;
-    auth.setUserData(email, name)
-      .then(res => {
-        console.log(res)
-        // setCurrentUser({ user: res });
+    const { email, name } = el;
+    auth
+      .setUserData(email, name)
+      .then((res) => {
+        console.log(res);
+        setCurrentUser({ user: res });
         // closeAllPopups();
       })
-      .catch(e => { console.log(e) })  
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
-
   function handleRegister(e) {
-const {password, email, name} = e;
-// console.log(password);
-// console.log(email);
-// console.log(name)
-
-    auth.register(password, email, name)
-        .then((res) => {
-            history.push('/singin');
-            
-            // setInfoTooltip({
-            //     message: 'Вы успешно зарегистрировались!',
-            //     image: infoTooltipSuccess
-            // });
-            // setInfoPopupOpen(true);
-            console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-            // setInfoTooltipFail();
-            // setInfoPopupOpen(true);
-        })
+    const { password, email, name } = e;
+    auth
+      .register(password, email, name)
+      .then((res) => {
+        history.push("/singin");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        // setInfoTooltipFail();
+        // setInfoPopupOpen(true);
+      });
   }
 
   function handleLogin(e, token) {
-    const {password, email} = e;
-    // console.log(password);
-    // console.log(email);
+    const { password, email } = e;
     console.log(token);
-    auth.login(password, email, token)
-        .then((res) => {
-          if (res) {
-            localStorage.setItem('token', res.token)
-            // setCurrentUserEmail(email);
-            setLoggedIn(true);
-            history.push('/');
-            // setInfoTooltip({
-            //     message: 'Вы успешно авторизовались!',
-            //     image: infoTooltipSuccess
-            // });
-            // setInfoPopupOpen(true);
+    auth
+      .login(password, email, token)
+      .then((res) => {
+        if (res) {
+          localStorage.setItem("token", res.token);
+          setLoggedIn(true);
+          history.push("/movies");
         }
-    })
-    .catch(() => {
+      })
+      .catch(() => {
         // setInfoTooltipFail();
         // setInfoPopupOpen(true);
-        })
+      });
   }
 
   function checkToken() {
-    setToken(localStorage.getItem('token'));
+    setToken(localStorage.getItem("token"));
 
     if (token) {
       setToken(token);
-      auth.getToken(token)
-        .then(res => {
+      auth
+        .getToken(token)
+        .then((res) => {
           // setCurrentUserEmail(res.email)
-          setLoggedIn(true)
+          setLoggedIn(true);
         })
-        .catch(e => { console.log(e) }) 
+        .catch((e) => {
+          console.log(e);
+        });
     }
   }
 
   function handleSignOut() {
-    localStorage.removeItem('token')
+    localStorage.removeItem("token");
+    // localStorage.removeItem('filteredMovies');
+    localStorage.removeItem("allMovies");
     setLoggedIn(false);
     setCurrentUser({});
-    history.push('/signin');
+    history.push("/signin");
     setToken("");
   }
-// console.log(token)
+
   React.useEffect(() => {
     if (loggedIn) {
-      history.push('/movies')
+      // history.push('/movies')
       // Promise.all([api.getUserData(), api.getCards()])
       // .then(([userData, cardsData]) => {
       //   setCurrentUser(userData);
       //   setCards(cardsData.reverse());
       // })
       // .catch(e => { console.log(e) })
-
-      auth.getUserData()
-      .then((userData) => {
-        setCurrentUser(userData);
-        console.log(userData);
-      })
-      .catch(e => { console.log(e) })
+      allMovies();
+      auth
+        .getUserData()
+        .then((userData) => {
+          setCurrentUser(userData);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
-    
-  // }, [loggedIn, history])
-}, [loggedIn])
 
-  React.useEffect(() => { 
+    // }, [loggedIn, history])
+  }, [loggedIn]);
+
+  React.useEffect(() => {
     checkToken();
-  }) 
+  });
 
-  
   function allMovies() {
+    setIsLoading(true);
     api.getMovies()
       .then((moviesData) => {
-        setMovies(moviesData);
-    })
-      .catch(e => { console.log(e) });
+        const allFilms = moviesData.map((obj) => {
+            return {
+                country: obj.country ? obj.country : "none",
+                director: obj.director ? obj.director : "none",
+                duration: obj.duration,
+                year: obj.year ? obj.year : 0,
+                description: obj.description ? obj.description : "none",
+                image: obj.image ? obj.image : "none",
+                trailerLink: obj.trailerLink,
+                thumbnail: obj.thumbnail ? obj.thumbnail : "none",
+                movieId: obj.id,
+                nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
+                nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
+            };
+          })
+          setMovies(allFilms);
+          localStorage.setItem("allMovies", JSON.stringify(allFilms));
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
-  React.useEffect(() => {
-    allMovies();
-    // console.log(movies);
-  }, 
-  [isBurgerMenuOpen]
-  )
-// console.log(movies);
-// console.log(currentUser);
+
+
+  function searchMovies(movies, query) {
+    const result = movies.filter((movie) => {
+      return (
+        movie.nameRU.toLowerCase().includes(query.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(query.toLowerCase()) ||
+        movie.country.toLowerCase().includes(query.toLowerCase())
+        // ||
+        // movie.description.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+    if (result.length === 0 
+      ) {
+    }
+    return result;
+  }
+
+
+const [findMovies, setFindMovies] = React.useState(JSON.parse(localStorage.getItem("findMovies")));
+
+  function submitSearch(query) {
+    setTimeout(() => setIsLoading(false), 500);
+
+    setFindMovies(searchMovies(movies, query));
+        if (findMovies.length === 0 ) {
+        console.log("PUSTO")
+    }
+  }
+
+
+  function handeleClickLike(movie) {
+    console.log(movie.trailerLink)
+    auth.createMovie({ movie })
+    .then((userData) => {
+      // setCurrentUser(userData);
+      console.log(userData);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }
+
+  useEffect(() => {
+    localStorage.setItem("findMovies", JSON.stringify(findMovies));
+  }, [findMovies]);
+
   useEffect(() => {});
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-    <div className="page">
-      <div className="page__container">
-        <Header
-          isLoggin={loggedIn}
-          onOpenBurger={handleIsBurgerMenuOpen}
-          onCloseBurger={closeAllPopups}
-          isBurgerOpen={isBurgerMenuOpen}
-        />
+      <div className="page">
+        <div className="page__container">
+          <Header
+            isLoggin={loggedIn}
+            onOpenBurger={handleIsBurgerMenuOpen}
+            onCloseBurger={closeAllPopups}
+            isBurgerOpen={isBurgerMenuOpen}
+          />
 
-        <Switch>
-          <Route path="/signup">
-            <Register
-            onSubmit={handleRegister}
-            />
-          </Route>
+          <Switch>
+            <Route path="/signup">
+              <Register onSubmit={handleRegister} />
+            </Route>
 
-          <Route path="/signin">
-            <Login
-            onSubmit={handleLogin}
-            />
-          </Route>
+            <Route path="/signin">
+              <Login onSubmit={handleLogin} />
+            </Route>
 
-          <Route path="/profile">
-            <Profile
-            // onSubmit={handleLogin}
-            userData={currentUser}
-            onUpdateUser={handleUpdateUser}
-            onSignOut={handleSignOut}
-            />
-          </Route>
+            <Route path="/profile">
+              <Profile
+                // onSubmit={handleLogin}
+                userData={currentUser}
+                onUpdateUser={handleUpdateUser}
+                onSignOut={handleSignOut}
+              />
+            </Route>
 
-          <Route path="/movies">
-            <Movies
-              movies={movies}
-            // onSubmit={handleLogin}
-            />
-          </Route>
-          <Route path="/saved-movies">
-            <SavedMovies
-            // onSubmit={handleLogin}
-            />
-          </Route>
+            <Route path="/movies">
+              <Movies
+                findMovies={findMovies}
+                // setSearch={setSearch}
+                onSubmitSearch={submitSearch}
+                isLoading={isLoading}
+                handeleClickLike={handeleClickLike}
+                // onSubmit={handleLogin}
+              />
+            </Route>
+            <Route path="/saved-movies">
+              <SavedMovies
+              // onSubmit={handleLogin}
+              />
+            </Route>
 
-          <Route path="/error">
-            <ErrorPage
-            // onSubmit={handleRegister}
-            />
-          </Route>
+            <Route path="/error">
+              <ErrorPage
+              // onSubmit={handleRegister}
+              />
+            </Route>
 
-          <Route path="/">
-            <Main />
+            <Route path="/">
+              <Main />
+              <Footer />
+            </Route>
+          </Switch>
+
+          <BurgerMenu
+            isOpen={isBurgerMenuOpen}
+            onCloseBurger={closeAllPopups}
+          />
+
+          <Route path="/(movies|saved-movies)">
             <Footer />
           </Route>
-        </Switch>
-
-        <BurgerMenu isOpen={isBurgerMenuOpen} onCloseBurger={closeAllPopups}/>
-
-        <Route path="/(movies|saved-movies)">
-          <Footer />
-        </Route>
+        </div>
       </div>
-    </div>
     </CurrentUserContext.Provider>
   );
 }

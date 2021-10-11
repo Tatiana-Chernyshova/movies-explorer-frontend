@@ -7,7 +7,7 @@ import "./Profile.css";
 function Profile({ onUpdateUser, userData, onSignOut }) {
   // const currentUser = React.useContext(CurrentUserContext);
   // const { name, email } = currentUser.user
-  const { user: { name=50, email=60 } } = React.useContext(CurrentUserContext);
+  const { user: { name, email } } = React.useContext(CurrentUserContext);
   
   // const { name, email } = currentUser
   // const [name, setName] = React.useState('');
@@ -58,7 +58,7 @@ function Profile({ onUpdateUser, userData, onSignOut }) {
         onSubmit={handleSubmit((data) => onUpdateUser(data))}
          noValidate>
           <h2 className="profile__heading">
-            {/* {`Привет, ${name}!`} */}
+            {`Привет, ${name}!`}
             {/* {currentUser && currentUser.user.name} */}
             </h2>
           <fieldset className="profile__input-container">

@@ -3,7 +3,7 @@ import "./MoviesCard.css";
 import { useState } from "react";
 // import film from "../../images/film.png";
 
-function MoviesCard({ buttonLikeClass, movie }) {
+function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
   const [isActive, setActive] = useState(false);
   let hour = Math.floor(movie.duration / 60);
   let minutes = ((movie.duration / 60 - hour) * 60).toFixed();
@@ -12,22 +12,20 @@ function MoviesCard({ buttonLikeClass, movie }) {
     e.stopPropagation();
     e.cancelBubble = true;
     setActive(!isActive);
+    // TODO: handele
+    handeleClickLike(movie);
     // console.log(movie);
   };
 
   const handleMovieClick = () => {
-    let url = movie.trailerLink;
-    window.open(url);
+    // if (movie.trailerLink != "none") {
+      let url = movie.trailerLink;
+      window.open(url);
+    // }
   };
 
-
-
-
-
   return (
-    <div className="card__item" 
-    onClick={handleMovieClick}
->
+    <div className="card__item" onClick={handleMovieClick}>
       <img
         className="card__image"
         src={`https://api.nomoreparties.co${movie.image.url}`}

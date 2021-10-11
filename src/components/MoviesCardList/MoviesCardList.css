@@ -27,10 +27,10 @@
   cursor: pointer;
 }
 
-.movies-card-list__submit:disabled {
+/* .movies-card-list__submit:disabled {
   background: red;
-  /* width: 1020px; */
-}
+       width: 1020px; 
+} */
 
 @media screen and (max-width: 892px) {
   .movies-card-list__box {

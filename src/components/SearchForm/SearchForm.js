@@ -4,7 +4,7 @@ import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import searchIcon from "../../images/icon__seach.svg";
 
-function SearchForm({ setSearch, movies, handleSearch }) {
+function SearchForm({ setSearch, movies, handleSearch, onSubmitSearch }) {
   // const [query, setQuery] = React.useState("");
 
   const {
@@ -12,7 +12,7 @@ function SearchForm({ setSearch, movies, handleSearch }) {
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onChange"
+    mode: "onSubmit"
   });
 
   function onSubmit(e) {
@@ -23,7 +23,9 @@ function SearchForm({ setSearch, movies, handleSearch }) {
     // setQuery(e);
 
     // setSearch(film);
-    handleSearch(e.query);
+    onSubmitSearch(e.query);
+    // getAllMovies();
+
   }
 
   // function handleChangeQuery(e) {
@@ -40,7 +42,7 @@ function SearchForm({ setSearch, movies, handleSearch }) {
   return (
     <article className="search__page">
       <div className="search__box">
-        <form className="search" name="search" onSubmit={handleSubmit(onSubmit)}>
+        <form className="search" name="search" onSubmit={handleSubmit(onSubmit)} noValidate>
           <fieldset className="search__input-container">
             <img src={searchIcon} alt="Лупа" className="search__icon" />
             <input
@@ -51,13 +53,13 @@ function SearchForm({ setSearch, movies, handleSearch }) {
               placeholder="Фильм"
               // value={email || ''}
               // value={film || ""}
-              required
+              // required
               // onChange={handleEmailChange}
               // minLength="5"
               // onChange={handleChangeQuery}
               // onChange={handleInputChange}
               {...register("query", {
-                required: "Необходимо ввести запрос",
+                required: "Нужно ввести ключевое слово",
                 minLength: {
                   value: 2,
                   message: "Введите минимум 2 символа",
@@ -76,7 +78,7 @@ function SearchForm({ setSearch, movies, handleSearch }) {
               type="submit"
               className="search__submit"
               aria-label="search__submit"
-              disabled={!isValid}
+              // disabled={!isValid}
             >
               Найти
             </button>

@@ -13,6 +13,7 @@ class MoviesApi {
     })
     .then(this._checkResponse)
   }
+  
     
   _checkResponse(res) {
     // console.log(res.json());

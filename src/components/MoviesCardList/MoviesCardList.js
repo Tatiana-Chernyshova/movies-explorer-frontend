@@ -1,80 +1,85 @@
 import "./MoviesCardList.css";
-import React from "react";
+import React, { useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-function MoviesCardList({ buttonLikeClass, movies, search }) {
-  const [more, setMore] = React.useState(3);
-  const [moviesShown, setMoviesShown] = React.useState([]);
-  const [disBtn, setDisBtn] = React.useState(false);
-  function filterItems(query) {
-    return movies.filter(function (elem) {
-      if (elem.country === query || elem.nameRU === query) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    // })
-  }
+function MoviesCardList({
+  buttonLikeClass,
+  findMovies,
+  search,
+  handeleClickLike,
+}) {
+  const [moreCards, setMoreCards] = React.useState(3);
+  // const [moviesShown, setMoviesShown] = React.useState([]);
+  // const [disBtn, setDisBtn] = React.useState(false);
+  // const findFilms = JSON.parse(localStorage.getItem("findMovies"));
+  const [startIndex, setStartIndex] = React.useState(0);
+  const [renderMovies, setRenderMovies] = React.useState([]);
+  // const [windowSize, setWindowSize] = React.useState('');
 
-  // const olo = "Soul Power"
-  const b = filterItems(search);
+  const isMobile = useMediaQuery({ maxWidth: 320 });
+  const isTablet = useMediaQuery({ maxWidth: 1279, minWidth: 321 });
+  const isLaptop = useMediaQuery({ minWidth: 1280 });
 
-  // const showMoreMovies = () => {
-  //   setMore((visible) => visible + 30);
-  // };
+  // function handleWindowSize() {
+  //   setWindowSize(window.innerWidth);
+  //   console.log(windowSize);
+  // }
 
-  const disBtnMore = () => {
-    // if (more >= movies.slice(0, more).length) {
-    //   return setDisBtn(true);
-    // }
-    // return setDisBtn(true)
-    // const isLastPage = endIndex === moviesShown.length;
-    // setDisBtn(isLastPage);
-  };
-
-//   const startIndex = 0 * more;
-//   const endIndex = startIndex + more;
-//   const pageItems = movies.slice(startIndex, endIndex);
-//   const isLastPage = pageItems.length !== more || endIndex === movies.length;
-//   console.log(
-//     `
-// more ${more}
-// startIndex ${startIndex}
-// endIndex ${endIndex}
-// isLastPage ${isLastPage}
-// `
-//   );
-  function handleShowMoreMovies() {
-    const startIndex = moviesShown.length;
-    const endIndex = startIndex + more;
-    const counter = movies.length - startIndex;
-    
-    setMore((visible) => visible + 30);
-    if (counter > 0) {
-      const newMovies = movies.slice(startIndex, endIndex);
-      setMoviesShown([...moviesShown, ...newMovies]);
-      // const isLastPage = endIndex === newMovies.length;
-      // setDisBtn(isLastPage);
+  function getIndex() {
+    if (isLaptop) {
+      return { startIndex: 12, more: 3 };
+    } else if (isTablet) {
+      return { startIndex: 8, more: 2 };
+    } else if (isMobile) {
+      return { startIndex: 5, more: 2 };
     }
   }
+
+  function renderMoreMovies() {
+    const endIndex = Math.min(findMovies.length, startIndex + moreCards);
+    const moreMovies = findMovies.slice(startIndex, endIndex);
+    setRenderMovies([...renderMovies, ...moreMovies]);
+    setStartIndex(endIndex);
+  }
+
+  function handleMoreMovies() {
+    // console.log("more");
+    renderMoreMovies();
+  }
+
+  function handleResize() {
+    const sumCards = getIndex();
+    setMoreCards(sumCards.more);
+  }
+
+  useEffect(
+    () => {
+      window.addEventListener("resize", handleResize);
+      // handleWindowSize();
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+    // , [windowSize]
+  );
+
+  useEffect(() => {
+    const sumCards = getIndex();
+    // console.log(sumCards);
+    setMoreCards(sumCards.more);
+    const endIndex = Math.min(findMovies.length, sumCards.startIndex);
+    setRenderMovies(findMovies.slice(0, endIndex));
+    setStartIndex(endIndex);
+  }, [findMovies]);
+
+  // useEffect(() => {}, [findMovies]);
+  // console.log(findMovies.length);
 
   return (
     <section className="movies-card-list">
       <div className="movies-card-list__box">
-        {/* {search && `${movies.map((obj) => (
-          <MoviesCard
-            movie={obj}
-            
-            
-            // onCardClick={onCardClick}
-            // onCardLike={onCardLike}
-            // onCardDelete={onCardDelete}
-            // key={obj._id}
-          />
-        ))}`} */}
-
-        {moviesShown.map((obj) => {
+        {/* {moviesShown.map((obj) => {
           return (
             <MoviesCard
               key={obj._id}
@@ -82,70 +87,41 @@ function MoviesCardList({ buttonLikeClass, movies, search }) {
               // isSavedMoviePage={isSavedMoviePage} onSaveMovie={onSaveMovie} onUnSaveMovie={onUnSaveMovie} isSave={checkSavedMovie(savedMovies, movie)}
             />
           );
-        })}
-
-        {/* {movies.slice(startIndex, endIndex).map(
-          (obj) => (
-            // {
-            <MoviesCard
-              movie={obj}
-              key={obj.id}
-              // olo={console.log(obj)}
-            />
-          )
-          // }})}
-          // }
-        )} */}
-        {/* {console.log(disBtn)} */}
-
-        {/* {movies.map((obj) => (
+        })} */}
+        {/* {isMobile ? (<p>Mobile</p>) : (<p>NOT Mobile</p>)} */}
+        {/* {isTablet ? (<p>Tablet</p>) : (<p>NOT Tablet</p>)}
+        {isLaptop ? (<p>Laptop</p>) : (<p>NOT Laptop</p>)} */}
+        {/* {findMovies.map((obj) => (
           <MoviesCard
             movie={obj}
             key={obj.id}
+            handeleClickLike={handeleClickLike}
             // olo={console.log(obj)}
           />
-          
-        ))}
-
-arr.slice(1, 3) */}
-        {/* 
-{b.map((obj) => (
-          <MoviesCard
-            movie={obj}
-            key={obj.id}
-            // olo={console.log(obj)}
-          />
-          
         ))} */}
 
-        {/* {console.log(movies)} */}
-        {/* // movies.map((movie) => (
-      //     <MoviesCard
-      //     movie={movie} 
-      //     // onCardClick={onCardClick}
-      //     // onCardLike={onCardLike}
-      //     // onCardDelete={onCardDelete}
-      //     buttonLikeClass={buttonLikeClass}
-      //     key={movie._id}
-      //     />
-      //   ) )
-        // } */}
-        {/* <MoviesCard buttonLikeClass={buttonLikeClass}/> */}
-        {/* <MoviesCard buttonLikeClass={buttonLikeClass}/>
-        <MoviesCard buttonLikeClass={buttonLikeClass}/>
-        <MoviesCard buttonLikeClass={buttonLikeClass}/>
-        <MoviesCard buttonLikeClass={buttonLikeClass}/> */}
+        {renderMovies.map((movie) => (
+          <MoviesCard
+            key={movie.id}
+            movie={movie}
+            // onLikeClick={toggleMovieLike}
+            // checkBookmarkStatus={checkBookmarkStatus}
+          />
+        ))}
       </div>
-      <button
-        type="submit"
-        className="movies-card-list__submit"
-        aria-label="movies-card-list__submit"
-        onClick={handleShowMoreMovies}
-        // {isLastPage && disabled}
-        disabled={disBtn}
-      >
-        Ещё
-      </button>
+
+      {startIndex < findMovies.length && (
+        <button
+          type="submit"
+          className="movies-card-list__submit"
+          aria-label="movies-card-list__submit"
+          onClick={handleMoreMovies}
+          // {isLastPage && disabled}
+          // disabled={disBtn}
+        >
+          Ещё
+        </button>
+      )}
     </section>
   );
 }
