@@ -24,7 +24,6 @@ import "../../vendor/normalize.css";
 import "../../vendor/font.css";
 
 function App() {
-
   const [loggedIn, setLoggedIn] = React.useState(true);
   // const [currentUser, setCurrentUser] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
@@ -35,6 +34,7 @@ function App() {
   const [token, setToken] = React.useState("");
   // const [earch, setSearch] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [searchMoviesResponse, setSearchMoviesResponse] = React.useState("");
 
   // function handleLogin() {
   //   // setLoggedIn(true);
@@ -141,6 +141,9 @@ function App() {
     setCurrentUser({});
     history.push("/signin");
     setToken("");
+    setSearchMoviesResponse("");
+    setFindMovies([]);
+    setMovies([]);
   }
 
   React.useEffect(() => {
@@ -152,7 +155,7 @@ function App() {
       //   setCards(cardsData.reverse());
       // })
       // .catch(e => { console.log(e) })
-      allMovies();
+      // allMovies();
       auth
         .getUserData()
         .then((userData) => {
@@ -172,27 +175,33 @@ function App() {
 
   function allMovies() {
     setIsLoading(true);
-    api.getMovies()
+    api
+      .getMovies()
       .then((moviesData) => {
         const allFilms = moviesData.map((obj) => {
-            return {
-                country: obj.country ? obj.country : "none",
-                director: obj.director ? obj.director : "none",
-                duration: obj.duration,
-                year: obj.year ? obj.year : 0,
-                description: obj.description ? obj.description : "none",
-                image: obj.image ? obj.image : "none",
-                trailerLink: obj.trailerLink,
-                thumbnail: obj.thumbnail ? obj.thumbnail : "none",
-                movieId: obj.id,
-                nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
-                nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
-            };
-          })
-          setMovies(allFilms);
-          localStorage.setItem("allMovies", JSON.stringify(allFilms));
+          return {
+            country: obj.country ? obj.country : "none",
+            director: obj.director ? obj.director : "none",
+            duration: obj.duration,
+            year: obj.year ? obj.year : 0,
+            description: obj.description ? obj.description : "none",
+            image: obj.image ? obj.image : "none",
+            trailerLink: obj.trailerLink,
+            thumbnail: obj.thumbnail ? obj.thumbnail : "none",
+            movieId: obj.movieId,
+            nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
+            nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
+          };
+        });
+        setMovies(allFilms);
+        localStorage.setItem("allMovies", JSON.stringify(allFilms));
       })
       .catch((e) => {
+        setSearchMoviesResponse(
+          `Во время запроса произошла ошибка. 
+          Возможно, проблема с соединением или сервер недоступен. 
+          Подождите немного и попробуйте ещё раз`
+        );
         console.log(e);
       })
       .finally(() => {
@@ -200,51 +209,88 @@ function App() {
       });
   }
 
-
   function searchMovies(movies, query) {
+    // setSearchMoviesResponse('')
     const result = movies.filter((movie) => {
       return (
         movie.nameRU.toLowerCase().includes(query.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(query.toLowerCase()) ||
-        movie.country.toLowerCase().includes(query.toLowerCase())
-        // ||
-        // movie.description.toLowerCase().includes(query.toLowerCase())
+        movie.country.toLowerCase().includes(query.toLowerCase()) ||
+        movie.description.toLowerCase().includes(query.toLowerCase())
       );
     });
-    if (result.length === 0 
-      ) {
+    if (result.length === 0) {
+      setSearchMoviesResponse("Ничего не найдено");
     }
     return result;
   }
 
+  function selectShortMovies(movies) {
+    const shortMovies = movies.filter(
+        (movie) => movie.duration <= 40
+    );
+    return shortMovies;
+}
 
-const [findMovies, setFindMovies] = React.useState(JSON.parse(localStorage.getItem("findMovies")));
+  // const [findMovies, setFindMovies] = React.useState(
+  //   JSON.parse(localStorage.getItem("findMovies"))
+  // );
+  const [findMovies, setFindMovies] = React.useState([]);
 
   function submitSearch(query) {
+    if (!query) {
+      localStorage.removeItem("findMovies")
+      // setFindMovies([]);
+      setSearchMoviesResponse("Нужно ввести ключевое слово");
+      return
+    }
+    setSearchMoviesResponse("")
+    allMovies();
     setTimeout(() => setIsLoading(false), 500);
 
     setFindMovies(searchMovies(movies, query));
-        if (findMovies.length === 0 ) {
-        console.log("PUSTO")
-    }
+    // localStorage.setItem("findMovies", JSON.stringify(findMovies));
+    localStorage.setItem("findMovies", JSON.stringify(searchMovies(movies, query)));
+    // if (query.length === 0) {
+    //   setSearchMoviesResponse("");
+    //   setFindMovies([]);
+    //   console.log("PUSTO");
+    // }
   }
-
-
+//  console.log(searchMoviesResponse)
   function handeleClickLike(movie) {
-    console.log(movie.trailerLink)
-    auth.createMovie({ movie })
-    .then((userData) => {
-      // setCurrentUser(userData);
-      console.log(userData);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+    console.log(movie);
+    // auth
+    //   .createMovie({ movie })
+    //   .then((userData) => {
+    //     // setCurrentUser(userData);
+    //     console.log(userData);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
   }
-
   useEffect(() => {
-    localStorage.setItem("findMovies", JSON.stringify(findMovies));
-  }, [findMovies]);
+    const movies = JSON.parse(localStorage.getItem("allMovies"));
+    // console.log("allMovies")
+    if (movies) {
+      setMovies(movies);
+        const searchResult = JSON.parse(
+            localStorage.getItem("findMovies")
+        );
+        if (searchResult) {
+          // setFindMovies([]);
+          setFindMovies(searchResult);
+        }
+    } else {
+      allMovies();
+      // setFindMovies([]);
+    }
+}, [loggedIn]);
+  // useEffect(() => {
+  //   // setFindMovies([]);
+  //   localStorage.setItem("findMovies", JSON.stringify(findMovies));
+  // }, [findMovies]);
 
   useEffect(() => {});
 
@@ -284,6 +330,8 @@ const [findMovies, setFindMovies] = React.useState(JSON.parse(localStorage.getIt
                 onSubmitSearch={submitSearch}
                 isLoading={isLoading}
                 handeleClickLike={handeleClickLike}
+                searchMoviesResponse={searchMoviesResponse}
+                selectShortMovies={selectShortMovies}
                 // onSubmit={handleLogin}
               />
             </Route>

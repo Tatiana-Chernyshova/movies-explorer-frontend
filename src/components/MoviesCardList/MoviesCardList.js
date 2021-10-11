@@ -8,6 +8,8 @@ function MoviesCardList({
   findMovies,
   search,
   handeleClickLike,
+  // isLoading,
+  // searchMoviesResponse,
 }) {
   const [moreCards, setMoreCards] = React.useState(3);
   // const [moviesShown, setMoviesShown] = React.useState([]);
@@ -99,11 +101,12 @@ function MoviesCardList({
             // olo={console.log(obj)}
           />
         ))} */}
-
+{/* {searchMoviesResponse && <p>{searchMoviesResponse}</p>} */}
         {renderMovies.map((movie) => (
           <MoviesCard
-            key={movie.id}
+            key={movie.movieId}
             movie={movie}
+            handeleClickLike={handeleClickLike}
             // onLikeClick={toggleMovieLike}
             // checkBookmarkStatus={checkBookmarkStatus}
           />

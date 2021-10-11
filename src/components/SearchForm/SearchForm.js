@@ -4,7 +4,7 @@ import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import searchIcon from "../../images/icon__seach.svg";
 
-function SearchForm({ setSearch, movies, handleSearch, onSubmitSearch }) {
+function SearchForm({ setSearch, movies, handleSearch, onSubmitSearch, setIsChecked }) {
   // const [query, setQuery] = React.useState("");
 
   const {
@@ -59,7 +59,7 @@ function SearchForm({ setSearch, movies, handleSearch, onSubmitSearch }) {
               // onChange={handleChangeQuery}
               // onChange={handleInputChange}
               {...register("query", {
-                required: "Нужно ввести ключевое слово",
+                // required: "Нужно ввести ключевое слово",
                 minLength: {
                   value: 2,
                   message: "Введите минимум 2 символа",
@@ -84,7 +84,7 @@ function SearchForm({ setSearch, movies, handleSearch, onSubmitSearch }) {
             </button>
           </fieldset>
         </form>
-        <FilterCheckbox />
+        <FilterCheckbox setIsChecked={setIsChecked}/>
       </div>
     </article>
   );

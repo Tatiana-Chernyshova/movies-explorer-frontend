@@ -53,7 +53,7 @@ export const setUserData = (email, name) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    credentials: "include",
+    // credentials: "include",
     body: JSON.stringify({ email, name }),
   }).then((result) => checkResponse(result));
 };

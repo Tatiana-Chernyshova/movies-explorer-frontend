@@ -13,8 +13,9 @@ function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
     e.cancelBubble = true;
     setActive(!isActive);
     // TODO: handele
+    // handeleClickLike(movie);
     handeleClickLike(movie);
-    // console.log(movie);
+    console.log(movie);
   };
 
   const handleMovieClick = () => {

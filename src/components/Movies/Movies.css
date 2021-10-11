@@ -1,0 +1,26 @@
+.movies__response {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 24px;
+  margin: 0 70px;
+}
+
+@media screen and (max-width: 1279px) {
+  .movies__response {
+    max-width: 752px;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .movies__response {
+    margin: 0 30px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .movies__response {
+    margin: 0 10px;
+  }
+}
