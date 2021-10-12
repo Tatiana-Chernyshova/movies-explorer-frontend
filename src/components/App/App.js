@@ -8,6 +8,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import api from "../../utils/MoviesApi.js";
 import * as auth from "../../utils/MainApi";
+import ProtectedRoute from "../ProtectedRoute";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
@@ -146,9 +147,10 @@ function App() {
     setSearchMoviesResponse("");
     setFindMovies([]);
     setMovies([]);
+    setSaveMovies([]);
+    localStorage.removeItem("findMovies");
+    localStorage.removeItem("saveMovies");
   }
-
-
 
   function allMovies() {
     setIsLoading(true);
@@ -163,7 +165,7 @@ function App() {
             year: obj.year ? obj.year : 0,
             description: obj.description ? obj.description : "none",
             image: `https://api.nomoreparties.co${obj.image.url}`,
-            trailer: obj.trailerLink,
+            trailer: obj.trailerLink ? obj.trailerLink : `https://www.youtube.com/`,
             nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
             nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
             thumbnail: `https://api.nomoreparties.co${obj.image.formats.thumbnail.url}`,
@@ -203,11 +205,9 @@ function App() {
   }
 
   function selectShortMovies(movies) {
-    const shortMovies = movies.filter(
-        (movie) => movie.duration <= 40
-    );
+    const shortMovies = movies.filter((movie) => movie.duration <= 40);
     return shortMovies;
-}
+  }
 
   // const [findMovies, setFindMovies] = React.useState(
   //   JSON.parse(localStorage.getItem("findMovies"))
@@ -216,114 +216,192 @@ function App() {
 
   function submitSearch(query) {
     if (!query) {
-      localStorage.removeItem("findMovies")
+      localStorage.removeItem("findMovies");
       // setFindMovies([]);
       setSearchMoviesResponse("Нужно ввести ключевое слово");
-      return
+      return;
     }
-    setSearchMoviesResponse("")
+    setSearchMoviesResponse("");
     allMovies();
     setTimeout(() => setIsLoading(false), 500);
 
     setFindMovies(searchMovies(movies, query));
     // localStorage.setItem("findMovies", JSON.stringify(findMovies));
-    localStorage.setItem("findMovies", JSON.stringify(searchMovies(movies, query)));
+    localStorage.setItem(
+      "findMovies",
+      JSON.stringify(searchMovies(movies, query))
+    );
     // if (query.length === 0) {
     //   setSearchMoviesResponse("");
     //   setFindMovies([]);
     //   console.log("PUSTO");
     // }
   }
-//  console.log(searchMoviesResponse)
-  function handeleClickLike(movie) {
-    console.log(movie);
-    auth
-      .createMovie(movie)
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
 
-  function handeleSavedMovie() {
+  function submitSaveSearch(query) {
+    setTimeout(() => setIsLoading(false), 500);
+    setSaveMovies(searchMovies(saveMovies, query));
+}
+
+  function savedMovies() {
     auth
       .getMovies(token)
       .then((data) => {
-        setSaveMovies(data);
-        console.log(data);
+        const { movie } = data;
+        setSaveMovies(movie);
+        localStorage.setItem("saveMovies", JSON.stringify(movie));
+      })
+      .catch((e) => {
+        console.log(e);
+        setSearchMoviesResponse(
+          `Во время запроса произошла ошибка. 
+          Возможно, проблема с соединением или сервер недоступен. 
+          Подождите немного и попробуйте ещё раз`
+        );
+      });
+  }
+
+  function addSavedMovies(movie) {
+    // console.log(movie);
+    auth
+      .createMovie(movie)
+      .then((res) => {
+        // const newSavedMovie = res.newMovie;
+        setSaveMovies([...saveMovies, res]);
+        // console.log(res);
+        // console.log(newMovie);
+        // setSaveMovies([...saveMovies, newMovie]);
       })
       .catch((e) => {
         console.log(e);
       });
   }
-  
-  // handeleSavedMovie();
-  // setSaveMovies(data);
-  //       // setCurrentUser(userData);
-        // console.log(saveMovies);
-//   useEffect(() => {
-//     const movies = JSON.parse(localStorage.getItem("allMovies"));
-//     // console.log("allMovies")
-//     if (movies) {
-//       setMovies(movies);
-//         const searchResult = JSON.parse(
-//             localStorage.getItem("findMovies")
-//         );
-//         if (searchResult) {
-//           // setFindMovies([]);
-//           setFindMovies(searchResult);
-//         }
-//     } else {
-//       allMovies();
-//       // setFindMovies([]);
-//     }
-// }, [loggedIn]);
 
-
-React.useEffect(() => {
-  if (loggedIn) {
-    // history.push('/movies')
-    // Promise.all([api.getUserData(), api.getCards()])
-    // .then(([userData, cardsData]) => {
-    //   setCurrentUser(userData);
-    //   setCards(cardsData.reverse());
-    // })
-    // .catch(e => { console.log(e) })
-    // allMovies();
+  function removeSavedMovies(movie) {
+    const movieId = saveMovies.find((el) => el.movieId === movie.movieId)._id;
     auth
-      .getUserData()
-      .then((userData) => {
-        setCurrentUser(userData);
+      .deleteMovie(movieId)
+      .then(() => {
+        savedMovies();
+        // console.log(res.message);
       })
       .catch((e) => {
         console.log(e);
       });
+  }
+
+
+
+
+  function toggleMovieLike(movie, isLiked) {
+    isLiked ? removeSavedMovies(movie) : addSavedMovies(movie);
+  }
+
+  function checkSavedMovie(movie) {
+    return saveMovies.some(
+        (film) => film.movieId === movie.movieId 
+    );         
+}
+
+  // handeleSavedMovie();
+  // setSaveMovies(data);
+  //       // setCurrentUser(userData);
+  // console.log(saveMovies);
+  //   useEffect(() => {
+  //     const movies = JSON.parse(localStorage.getItem("allMovies"));
+  //     // console.log("allMovies")
+  //     if (movies) {
+  //       setMovies(movies);
+  //         const searchResult = JSON.parse(
+  //             localStorage.getItem("findMovies")
+  //         );
+  //         if (searchResult) {
+  //           // setFindMovies([]);
+  //           setFindMovies(searchResult);
+  //         }
+  //     } else {
+  //       allMovies();
+  //       // setFindMovies([]);
+  //     }
+  // }, [loggedIn]);
+  useEffect(() => {
+    // const token = localStorage.getItem("jwt");
+    // if (!token) {
+    //     return;
+    // } else {
+    //     Promise.all([getUser(token), getFavoriteMovies()])
+    //         .then(([userData, favoriteMovieData]) => {
+    //             setCurrentUser({
+    //                 ...currentUser,
+    //                 name: userData.name,
+    //                 email: userData.email,
+    //             });
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    } else {
+      // savedMovies() {
+      //   auth
+      //     .getMovies
+      // history.push("/movies");
+      Promise.all([auth.getUserData(), savedMovies()])
+        .then(([userData, savedMoviesData]) => {
+          setCurrentUser(userData);
+          // setCards(cardsData.reverse());
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      // allMovies();
+    }
+    // auth
+    // .getUserData()
+    // .then((userData) => {
+    //   setCurrentUser(userData);
+    // })
+    // .catch((e) => {
+    //   console.log(e);
+    // });
+  }, [loggedIn]);
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      // history.push('/movies')
+      // Promise.all([api.getUserData(), api.getCards()])
+      // .then(([userData, cardsData]) => {
+      //   setCurrentUser(userData);
+      //   setCards(cardsData.reverse());
+      // })
+      // .catch(e => { console.log(e) })
+      // allMovies();
+
       const movies = JSON.parse(localStorage.getItem("allMovies"));
       // console.log("allMovies")
       if (movies) {
+        savedMovies();
         setMovies(movies);
-          const searchResult = JSON.parse(
-              localStorage.getItem("findMovies")
-          );
-          if (searchResult) {
-            // setFindMovies([]);
-            setFindMovies(searchResult);
-          }
+        const searchResult = JSON.parse(localStorage.getItem("findMovies"));
+        if (searchResult) {
+          // setFindMovies([]);
+          setFindMovies(searchResult);
+        }
       } else {
         allMovies();
         // setFindMovies([]);
       }
+    }
 
-  }
+    // }, [loggedIn, history])
+  }, [loggedIn]);
 
-  // }, [loggedIn, history])
-}, [loggedIn]);
-
-React.useEffect(() => {
-  checkToken();
-});
+  React.useEffect(() => {
+    checkToken();
+  });
 
   // useEffect(() => {
   //   // setFindMovies([]);
@@ -351,31 +429,51 @@ React.useEffect(() => {
               <Login onSubmit={handleLogin} />
             </Route>
 
-            <Route path="/profile">
+            <ProtectedRoute
+                        path="/profile"
+                        component={Profile}
+                        loggedIn={loggedIn}
+                        userData={currentUser}
+                        onUpdateUser={handleUpdateUser}
+                        onSignOut={handleSignOut}
+                    />
+
+            {/* <Route path="/profile">
               <Profile
                 // onSubmit={handleLogin}
                 userData={currentUser}
                 onUpdateUser={handleUpdateUser}
                 onSignOut={handleSignOut}
               />
-            </Route>
+            </Route> */}
 
             <Route path="/movies">
               <Movies
-                findMovies={findMovies}
+                movies={findMovies}
                 // setSearch={setSearch}
                 onSubmitSearch={submitSearch}
                 isLoading={isLoading}
-                handeleClickLike={handeleClickLike}
+                toggleMovieLike={toggleMovieLike}
+                checkSavedMovie={checkSavedMovie}
                 searchMoviesResponse={searchMoviesResponse}
                 selectShortMovies={selectShortMovies}
+                
+                
                 // onSubmit={handleLogin}
               />
             </Route>
             <Route path="/saved-movies">
               <SavedMovies
-              // onSubmit={handleLogin}
-              handeleSavedMovie={handeleSavedMovie}
+                // onSubmit={handleLogin}
+                // handeleSavedMovie={handeleSavedMovie}
+                movies={saveMovies}
+                onSubmitSearch={submitSaveSearch}
+                isLoading={isLoading}
+                toggleMovieLike={toggleMovieLike}
+                checkSavedMovie={checkSavedMovie}
+                searchMoviesResponse={searchMoviesResponse}
+                selectShortMovies={selectShortMovies}
+                
               />
             </Route>
 

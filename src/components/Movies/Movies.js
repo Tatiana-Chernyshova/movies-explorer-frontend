@@ -5,14 +5,15 @@ import SearchForm from "../SearchForm/SearchForm";
 import Preloader from "../Preloader/Preloader";
 
 function Movies({
-  findMovies,
+  movies,
   setSearch,
   getAllMovies,
   onSubmitSearch,
   isLoading,
-  handeleClickLike,
+  toggleMovieLike,
   searchMoviesResponse,
   selectShortMovies,
+  checkSavedMovie,
 }) {
   // const [search, setSearch] = useState("");
   // function handleSearch(e) {
@@ -25,9 +26,11 @@ function Movies({
 
   useEffect(() => {
     if (isChecked) {
-      setShortMovies(selectShortMovies(findMovies));
+      setShortMovies(selectShortMovies(movies));
     }
   }, [isChecked, onSubmitSearch]);
+  useEffect(() => {
+  }, [toggleMovieLike]);
 
   return (
     <>
@@ -41,22 +44,22 @@ function Movies({
       {searchMoviesResponse && (
         <p className="movies__response">{searchMoviesResponse}</p>
       )}
-      {isChecked && findMovies.length !== 0 && shortMovies.length === 0 && (
+      {isChecked && movies.length !== 0 && shortMovies.length === 0 && (
         <p className="movies__response">Короткометражных фильмов не найдено</p>
       )}
       {!isLoading && !searchMoviesResponse && (
         <MoviesCardList
-          findMovies={isChecked ? shortMovies : findMovies}
+          movies={isChecked ? shortMovies : movies}
           // movies={isChecked ? shortMovies : movies}
-          handeleClickLike={handeleClickLike}
+          
           searchMoviesResponse={searchMoviesResponse}
+          isPageAllMovies={true}
+          toggleMovieLike={toggleMovieLike}
+          checkSavedMovie={checkSavedMovie}
           // isLoading={isLoading}
           // search={search}
         />
       )}
-      {/* )} */}
-      {/* TODO: delere */}
-      {/* <MoviesCardList /> */}
     </>
   );
 }

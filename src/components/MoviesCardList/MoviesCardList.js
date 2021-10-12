@@ -5,16 +5,19 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 
 function MoviesCardList({
   buttonLikeClass,
-  findMovies,
+  movies,
   search,
-  handeleClickLike,
+  toggleMovieLike,
+  checkSavedMovie,
+  saveMovies,
+  isPageAllMovies,
   // isLoading,
   // searchMoviesResponse,
 }) {
   const [moreCards, setMoreCards] = React.useState(3);
   // const [moviesShown, setMoviesShown] = React.useState([]);
   // const [disBtn, setDisBtn] = React.useState(false);
-  // const findFilms = JSON.parse(localStorage.getItem("findMovies"));
+  // const findFilms = JSON.parse(localStorage.getItem("movies"));
   const [startIndex, setStartIndex] = React.useState(0);
   const [renderMovies, setRenderMovies] = React.useState([]);
   // const [windowSize, setWindowSize] = React.useState('');
@@ -39,8 +42,8 @@ function MoviesCardList({
   }
 
   function renderMoreMovies() {
-    const endIndex = Math.min(findMovies.length, startIndex + moreCards);
-    const moreMovies = findMovies.slice(startIndex, endIndex);
+    const endIndex = Math.min(movies.length, startIndex + moreCards);
+    const moreMovies = movies.slice(startIndex, endIndex);
     setRenderMovies([...renderMovies, ...moreMovies]);
     setStartIndex(endIndex);
   }
@@ -70,55 +73,54 @@ function MoviesCardList({
     const sumCards = getIndex();
     // console.log(sumCards);
     setMoreCards(sumCards.more);
-    const endIndex = Math.min(findMovies.length, sumCards.startIndex);
-    setRenderMovies(findMovies.slice(0, endIndex));
+    const endIndex = Math.min(movies.length, sumCards.startIndex);
+    setRenderMovies(movies.slice(0, endIndex));
     setStartIndex(endIndex);
-  }, [findMovies]);
+  }, [movies]);
 
-  // useEffect(() => {}, [findMovies]);
-  // console.log(findMovies.length);
+  useEffect(() => {
+  }, [saveMovies]);
+
+  // useEffect(() => {}, [movies]);
+  // console.log(movies.length);
 
   return (
     <section className="movies-card-list">
       <div className="movies-card-list__box">
-        {/* {moviesShown.map((obj) => {
-          return (
-            <MoviesCard
-              key={obj._id}
-              movie={obj}
-              // isSavedMoviePage={isSavedMoviePage} onSaveMovie={onSaveMovie} onUnSaveMovie={onUnSaveMovie} isSave={checkSavedMovie(savedMovies, movie)}
-            />
-          );
-        })} */}
-        {/* {isMobile ? (<p>Mobile</p>) : (<p>NOT Mobile</p>)} */}
-        {/* {isTablet ? (<p>Tablet</p>) : (<p>NOT Tablet</p>)}
-        {isLaptop ? (<p>Laptop</p>) : (<p>NOT Laptop</p>)} */}
-        {/* {findMovies.map((obj) => (
-          <MoviesCard
-            movie={obj}
-            key={obj.id}
-            handeleClickLike={handeleClickLike}
-            // olo={console.log(obj)}
-          />
-        ))} */}
-{/* {searchMoviesResponse && <p>{searchMoviesResponse}</p>} */}
-        {renderMovies.map((movie) => (
+        {/* {searchMoviesResponse && <p>{searchMoviesResponse}</p>} */}
+        {isPageAllMovies && renderMovies.map((movie) => (
           <MoviesCard
             key={movie.movieId}
             movie={movie}
-            handeleClickLike={handeleClickLike}
+            toggleMovieLike={toggleMovieLike}
+            checkSavedMovie={checkSavedMovie}
+            buttonLikeClass={buttonLikeClass}
+            // onLikeClick={toggleMovieLike}
+            // checkBookmarkStatus={checkBookmarkStatus}
+          />
+        ))}
+        {/* {console.log(saveMovies)} */}
+        {!isPageAllMovies && movies.map((movie) => (
+          <MoviesCard
+            key={movie.movieId}
+            movie={movie}
+            toggleMovieLike={toggleMovieLike}
+            checkSavedMovie={checkSavedMovie}
+            buttonLikeClass={buttonLikeClass}
+
             // onLikeClick={toggleMovieLike}
             // checkBookmarkStatus={checkBookmarkStatus}
           />
         ))}
       </div>
 
-      {startIndex < findMovies.length && (
+      {isPageAllMovies && startIndex < movies.length && (
         <button
           type="submit"
           className="movies-card-list__submit"
           aria-label="movies-card-list__submit"
           onClick={handleMoreMovies}
+          isPageAllMovies={isPageAllMovies}
           // {isLastPage && disabled}
           // disabled={disBtn}
         >

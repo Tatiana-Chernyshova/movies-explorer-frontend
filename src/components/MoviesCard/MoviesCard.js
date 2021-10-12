@@ -1,22 +1,25 @@
 /* eslint-disable jsx-a11y/alt-text */
 import "./MoviesCard.css";
-import { useState } from "react";
+import { useEffect } from "react";
 // import film from "../../images/film.png";
 
-function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
-  const [isActive, setActive] = useState(false);
+function MoviesCard({ buttonLikeClass, movie, toggleMovieLike, checkSavedMovie, isPageAllMovies }) {
+  // const [isActive, setActive] = useState(false);
+  const isLiked = checkSavedMovie(movie);
   let hour = Math.floor(movie.duration / 60);
   let minutes = ((movie.duration / 60 - hour) * 60).toFixed();
 
   const handleLikeClick = (e) => {
     e.stopPropagation();
     e.cancelBubble = true;
-    setActive(!isActive);
+    // setActive(!isActive);
     // TODO: handele
     // handeleClickLike(movie);
-    handeleClickLike(movie);
-    // console.log(movie);
+    // toggleMovieLike(movie);
+    // console.log(isLiked);
+    toggleMovieLike(movie, isLiked);
   };
+
 
   const handleMovieClick = () => {
     // if (movie.trailerLink != "none") {
@@ -25,6 +28,8 @@ function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
     // }
   };
 
+  // useEffect(() => {
+  // }, [buttonLikeClass]);
   return (
     <div className="card__item" onClick={handleMovieClick}>
       <img
@@ -50,7 +55,7 @@ function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
           className={`card__like ${
             buttonLikeClass
               ? buttonLikeClass
-              : `card__like_disactive card__like_${isActive && "active"}`
+              : `card__like_disactive card__like_${isLiked && "active"}`
           }`}
           type="button"
           aria-label="Мне нравится"

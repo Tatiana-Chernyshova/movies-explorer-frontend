@@ -1,4 +1,4 @@
-// export const BASE_URL = "https://api.cherduk-movies.nomoredomains.club";
+export const BASE_URL = "https://api.cherduk-movies.nomoredomains.club";
 
 export const register = (password, email, name) => {
   return fetch(`${BASE_URL}/signup`, {
@@ -57,7 +57,6 @@ export const setUserData = (email, name) => {
     body: JSON.stringify({ email, name }),
   }).then((result) => checkResponse(result));
 };
-export const BASE_URL = "https://api.cherduk-movies.nomoredomains.club";
 
 export const createMovie = (movie) => {
   return fetch(`${BASE_URL}/movies`, {
@@ -67,7 +66,7 @@ export const createMovie = (movie) => {
       "Content-Type": "application/json",
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-    credentials: "include",
+    // credentials: "include",
     body: JSON.stringify(
       movie
     ),
@@ -80,13 +79,26 @@ export const getMovies = (token) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
       // authorization: `Bearer ${token}`,
     },
-    credentials: "include",
+    // credentials: "include",
     // body: JSON.stringify({
     //   movie,
     // }),
+  }).then((result) => checkResponse(result));
+};
+
+export const deleteMovie = (movieId) => {
+  return fetch(`${BASE_URL}/movies/${movieId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    },
+    // body: JSON.stringify(
+    //   movie
+    // ),
   }).then((result) => checkResponse(result));
 };
 
