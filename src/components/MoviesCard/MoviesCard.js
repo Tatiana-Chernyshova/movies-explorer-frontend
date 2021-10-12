@@ -15,12 +15,12 @@ function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
     // TODO: handele
     // handeleClickLike(movie);
     handeleClickLike(movie);
-    console.log(movie);
+    // console.log(movie);
   };
 
   const handleMovieClick = () => {
     // if (movie.trailerLink != "none") {
-      let url = movie.trailerLink;
+      let url = movie.trailer;
       window.open(url);
     // }
   };
@@ -29,8 +29,8 @@ function MoviesCard({ buttonLikeClass, movie, handeleClickLike }) {
     <div className="card__item" onClick={handleMovieClick}>
       <img
         className="card__image"
-        src={`https://api.nomoreparties.co${movie.image.url}`}
-        alt={movie.image.name}
+        src={movie.image}
+        alt={movie.nameRU}
         // onClick={handleClick}
       />
       <div className="card__box">

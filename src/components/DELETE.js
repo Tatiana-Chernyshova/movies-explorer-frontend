@@ -22,6 +22,74 @@ function App() {
 
   // console.log(errors.name)
 
+
+ { 
+  "country": "США, Германия, Великобритания, Нидерланды, Бельгия, Франция",
+  "description": "Невероятная история любви Дженезиса Пи-Орриджа и его жены Леди Джей, вместе с ним игравшей в группе Psychic TV, — история, которая вряд ли сообщает что-то новое о природе индастриала, но определенно — о природе человека вообще и о природе Пи-Орриджа в частности. Нью-йоркская художница французского происхождения Мари Лозье задумала и начала снимать этот фильм семь лет тому назад — ходила в гости в их квартиру в Нью-Йорке, снимала Дженезиса, стоящего за плитой, и Джей с пучками петрушки и котом на шестнадцатимиллиметровую камеру, одевала их в дурацкие костюмы, ездила с Psychic TV в тур и следила за тем, как любовь заставляет человека отказаться от собственной личности, раствориться в другом человеке и стать одним целым с возлюбленным, используя метод сut-up Уилльяма Берроуза; когда Леди Джей умерла в 2007 году, Дженезис сделал ее татуировку почти во всю руку и до сих пор говорит «мы» вместо «я».",
+  "director": "Мари Лозье",
+  "duration": 65,
+  "image": "https://api.nomoreparties.co/uploads/ballad_of_genesis_and_lady_jaye_10c27afa96.jpeg",
+  "movieId": 11,
+  "nameEN": "The Ballad of Genesis and Lady Jaye",
+  "nameRU": "Баллада о Дженезисе и Леди Джей",
+  "thumbnail": "https://api.nomoreparties.co/uploads/thumbnail_ballad_of_genesis_and_lady_jaye_10c27afa96.jpeg",
+  "trailer": "https://www.youtube.com/watch?v=d8BX2FDrogo",
+  "year": "2011"
+}
+
+const getMovies = (req, res, next) => Movie.find({ owner: req.user._id })
+  .then((movie) => {
+    res.status(200)
+      .send({ movie });
+  })
+  .catch((err) => {
+    next(err);
+  });
+
+const createMovie = (req, res, next) => {
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+  } = req.body;
+  const { _id } = req.user;
+  return Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: _id,
+  })
+
+    .then((movie) => res.send(movie))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(
+          new Error400('Переданы некорректные данные при создании фильма'),
+        );
+      }
+      next(err);
+    });
+};
+
+
+
+
   return (
     <div className="container pt-5">
       <div className="row justify-content-sm-center pt-5">

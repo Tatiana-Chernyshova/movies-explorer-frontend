@@ -24,12 +24,13 @@ import "../../vendor/normalize.css";
 import "../../vendor/font.css";
 
 function App() {
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   // const [currentUser, setCurrentUser] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const history = useHistory();
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = React.useState(false);
   const [movies, setMovies] = React.useState([]);
+  const [saveMovies, setSaveMovies] = React.useState([]);
   // const [findMovies, setFindMovies] = React.useState([]);
   const [token, setToken] = React.useState("");
   // const [earch, setSearch] = React.useState("");
@@ -126,6 +127,7 @@ function App() {
         .then((res) => {
           // setCurrentUserEmail(res.email)
           setLoggedIn(true);
+          // console.log(res);
         })
         .catch((e) => {
           console.log(e);
@@ -146,32 +148,7 @@ function App() {
     setMovies([]);
   }
 
-  React.useEffect(() => {
-    if (loggedIn) {
-      // history.push('/movies')
-      // Promise.all([api.getUserData(), api.getCards()])
-      // .then(([userData, cardsData]) => {
-      //   setCurrentUser(userData);
-      //   setCards(cardsData.reverse());
-      // })
-      // .catch(e => { console.log(e) })
-      // allMovies();
-      auth
-        .getUserData()
-        .then((userData) => {
-          setCurrentUser(userData);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
 
-    // }, [loggedIn, history])
-  }, [loggedIn]);
-
-  React.useEffect(() => {
-    checkToken();
-  });
 
   function allMovies() {
     setIsLoading(true);
@@ -185,12 +162,12 @@ function App() {
             duration: obj.duration,
             year: obj.year ? obj.year : 0,
             description: obj.description ? obj.description : "none",
-            image: obj.image ? obj.image : "none",
-            trailerLink: obj.trailerLink,
-            thumbnail: obj.thumbnail ? obj.thumbnail : "none",
-            movieId: obj.movieId,
+            image: `https://api.nomoreparties.co${obj.image.url}`,
+            trailer: obj.trailerLink,
             nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
             nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
+            thumbnail: `https://api.nomoreparties.co${obj.image.formats.thumbnail.url}`,
+            movieId: obj.id,
           };
         });
         setMovies(allFilms);
@@ -260,38 +237,98 @@ function App() {
 //  console.log(searchMoviesResponse)
   function handeleClickLike(movie) {
     console.log(movie);
-    // auth
-    //   .createMovie({ movie })
-    //   .then((userData) => {
-    //     // setCurrentUser(userData);
-    //     console.log(userData);
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
+    auth
+      .createMovie(movie)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
-  useEffect(() => {
-    const movies = JSON.parse(localStorage.getItem("allMovies"));
-    // console.log("allMovies")
-    if (movies) {
-      setMovies(movies);
-        const searchResult = JSON.parse(
-            localStorage.getItem("findMovies")
-        );
-        if (searchResult) {
-          // setFindMovies([]);
-          setFindMovies(searchResult);
-        }
-    } else {
-      allMovies();
-      // setFindMovies([]);
-    }
+
+  function handeleSavedMovie() {
+    auth
+      .getMovies(token)
+      .then((data) => {
+        setSaveMovies(data);
+        console.log(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+  
+  // handeleSavedMovie();
+  // setSaveMovies(data);
+  //       // setCurrentUser(userData);
+        // console.log(saveMovies);
+//   useEffect(() => {
+//     const movies = JSON.parse(localStorage.getItem("allMovies"));
+//     // console.log("allMovies")
+//     if (movies) {
+//       setMovies(movies);
+//         const searchResult = JSON.parse(
+//             localStorage.getItem("findMovies")
+//         );
+//         if (searchResult) {
+//           // setFindMovies([]);
+//           setFindMovies(searchResult);
+//         }
+//     } else {
+//       allMovies();
+//       // setFindMovies([]);
+//     }
+// }, [loggedIn]);
+
+
+React.useEffect(() => {
+  if (loggedIn) {
+    // history.push('/movies')
+    // Promise.all([api.getUserData(), api.getCards()])
+    // .then(([userData, cardsData]) => {
+    //   setCurrentUser(userData);
+    //   setCards(cardsData.reverse());
+    // })
+    // .catch(e => { console.log(e) })
+    // allMovies();
+    auth
+      .getUserData()
+      .then((userData) => {
+        setCurrentUser(userData);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+      const movies = JSON.parse(localStorage.getItem("allMovies"));
+      // console.log("allMovies")
+      if (movies) {
+        setMovies(movies);
+          const searchResult = JSON.parse(
+              localStorage.getItem("findMovies")
+          );
+          if (searchResult) {
+            // setFindMovies([]);
+            setFindMovies(searchResult);
+          }
+      } else {
+        allMovies();
+        // setFindMovies([]);
+      }
+
+  }
+
+  // }, [loggedIn, history])
 }, [loggedIn]);
+
+React.useEffect(() => {
+  checkToken();
+});
+
   // useEffect(() => {
   //   // setFindMovies([]);
   //   localStorage.setItem("findMovies", JSON.stringify(findMovies));
   // }, [findMovies]);
-
   useEffect(() => {});
 
   return (
@@ -338,6 +375,7 @@ function App() {
             <Route path="/saved-movies">
               <SavedMovies
               // onSubmit={handleLogin}
+              handeleSavedMovie={handeleSavedMovie}
               />
             </Route>
 
