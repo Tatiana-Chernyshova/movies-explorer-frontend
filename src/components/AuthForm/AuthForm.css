@@ -75,7 +75,16 @@ grid-template-rows: 22px 46px 20px;
   color: #ff4062;
   padding: 0;
   margin: 0;
-  align-self: end;
+  align-self: center;
+}
+
+.auth__message{
+  display: flex;
+  padding: 10px 0 0;
+  margin: 0 0 -21px;
+  font-size: 10px;
+  color: #ff4062;
+  justify-content: center;
 }
 
 .auth__submit {
@@ -92,11 +101,14 @@ grid-template-rows: 22px 46px 20px;
   transition: opacity 0.4s linear 0s;
 }
 
-.auth__submit:hover {
+.auth__submit:hover:enabled {
   opacity: 0.8;
 }
 
-
+.auth__submit:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
 
 .auth__after {
   display: grid;
@@ -110,6 +122,7 @@ grid-template-rows: 22px 46px 20px;
   padding: 0;
   font-size: 14px;
   color: #a0a0a0;
+  cursor: default;
 }
 
 .auth__link {

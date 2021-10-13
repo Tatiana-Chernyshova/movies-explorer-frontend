@@ -24,7 +24,13 @@
   background: #f9f9f9;
   border-radius: 6px;
   align-self: center;
+  cursor: pointer;
 }
+
+/* .movies-card-list__submit:disabled {
+  background: red;
+       width: 1020px; 
+} */
 
 @media screen and (max-width: 892px) {
   .movies-card-list__box {
