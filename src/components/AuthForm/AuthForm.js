@@ -12,6 +12,7 @@ function AuthForm({
   link,
   linkText,
   registration,
+  authMessage,
   // isValid,
 }) {
 //   const [name, setName] = React.useState("");
@@ -65,7 +66,7 @@ function AuthForm({
   const {
     register,
     handleSubmit,
-    setValue,
+    // setValue,
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
@@ -170,7 +171,9 @@ function AuthForm({
             )}
             {/* <span className="auth__error"></span> */}
           </div>
-
+          {authMessage && (
+              <span className="auth__message">{authMessage}</span>
+            )}
           <button
             type="submit"
             className="auth__submit"

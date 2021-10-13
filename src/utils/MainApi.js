@@ -47,45 +47,35 @@ export const getUserData = () => {
 
 export const setUserData = (email, name) => {
   return fetch(`${BASE_URL}/users/me`, {
-    // mode: 'no-cors',
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    // credentials: "include",
     body: JSON.stringify({ email, name }),
+  }).then((result) => checkResponse(result));
+};
+
+export const getMovies = () => {
+  return fetch(`${BASE_URL}/movies`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
   }).then((result) => checkResponse(result));
 };
 
 export const createMovie = (movie) => {
   return fetch(`${BASE_URL}/movies`, {
-    // mode: 'no-cors',
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-    // credentials: "include",
     body: JSON.stringify(
       movie
     ),
-  }).then((result) => checkResponse(result));
-};
-
-export const getMovies = (token) => {
-  return fetch(`${BASE_URL}/movies`, {
-    // mode: 'no-cors',
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      // authorization: `Bearer ${token}`,
-    },
-    // credentials: "include",
-    // body: JSON.stringify({
-    //   movie,
-    // }),
   }).then((result) => checkResponse(result));
 };
 
@@ -96,9 +86,6 @@ export const deleteMovie = (movieId) => {
       "Content-Type": "application/json",
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-    // body: JSON.stringify(
-    //   movie
-    // ),
   }).then((result) => checkResponse(result));
 };
 
@@ -106,5 +93,5 @@ function checkResponse(res) {
   if (res.ok) {
     return res.json();
   }
-  return Promise.reject(`Ошибка: ${res.status}`);
+  return Promise.reject(res.status);
 }

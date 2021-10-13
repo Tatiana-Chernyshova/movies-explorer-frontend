@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 // import { Route, Switch, Redirect, useHistory } from "react-router-dom";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 // import ProtectedRoute from "./ProtectedRoute";
 // import { Route } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
@@ -37,7 +37,7 @@ function App() {
   // const [earch, setSearch] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchMoviesResponse, setSearchMoviesResponse] = React.useState("");
-
+  const [findMovies, setFindMovies] = React.useState([]);
   // function handleLogin() {
   //   // setLoggedIn(true);
   // }
@@ -47,18 +47,18 @@ function App() {
   function closeAllPopups() {
     setIsBurgerMenuOpen(false);
   }
-  function filterItems(search) {
-    const movies = JSON.parse(localStorage.getItem("movies"));
-    console.log(movies);
-    return movies.filter(function (elem) {
-      if (elem.country === search || elem.nameRU === search) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    // })
-  }
+  // function filterItems(search) {
+  //   const movies = JSON.parse(localStorage.getItem("movies"));
+  //   console.log(movies);
+  //   return movies.filter(function (elem) {
+  //     if (elem.country === search || elem.nameRU === search) {
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   });
+  //   // })
+  // }
   // filterItems(search)
 
   // function handleUpdateUser(el) {
@@ -78,10 +78,25 @@ function App() {
       .then((res) => {
         console.log(res);
         setCurrentUser({ user: res });
+        setAuthMessage('Данные успешно изменены');
+        setTimeout(() => setAuthMessage(''), 1000);
+        
         // closeAllPopups();
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((err) => {
+        if (err === 400 || err === 401) {
+          setAuthMessage('Переданы некорректные данные при создании пользователя');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        } else if (err === 409) {
+          setAuthMessage('Данный email уже зарегистрирован');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        } else {
+          setAuthMessage('На сервере произошла ошибка')
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        }
       });
   }
 
@@ -90,19 +105,40 @@ function App() {
     auth
       .register(password, email, name)
       .then((res) => {
-        history.push("/singin");
-        console.log(res);
+        // const user = {password, email}
+        // history.push("/singin");
+        // const { user } = res;
+        // console.log(user);
+        // console.log(email);
+        // console.log(name);
+        // console.log(user);
+        handleLogin({ password, email }, token)
       })
-      .catch((err) => {
-        console.log(err);
-        // setInfoTooltipFail();
-        // setInfoPopupOpen(true);
-      });
+      // .catch((err) => {
+      //   console.log(err);
+      //   // setInfoTooltipFail();
+      //   // setInfoPopupOpen(true);
+      // });
+      .catch(err => {
+        if (err === 400 || err === 401) {
+          setAuthMessage('Переданы некорректные данные при создании пользователя');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        } else if (err === 409) {
+          setAuthMessage('Данный email уже зарегистрирован');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        } else {
+          setAuthMessage('На сервере произошла ошибка');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        }
+      })
   }
 
-  function handleLogin(e, token) {
-    const { password, email } = e;
-    console.log(token);
+  function handleLogin({ password, email }, token) {
+    // const { password, email } = e;
+    // console.log(token);
     auth
       .login(password, email, token)
       .then((res) => {
@@ -112,9 +148,16 @@ function App() {
           history.push("/movies");
         }
       })
-      .catch(() => {
-        // setInfoTooltipFail();
-        // setInfoPopupOpen(true);
+      .catch((err) => {
+        if (err === 401) {
+          setAuthMessage('Неправильные почта или пароль');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        } else {
+          setAuthMessage('На сервере произошла ошибка');
+          setTimeout(() => setAuthMessage(''), 1000);
+          // console.log(err);
+        }
       });
   }
 
@@ -142,7 +185,7 @@ function App() {
     localStorage.removeItem("allMovies");
     setLoggedIn(false);
     setCurrentUser({});
-    history.push("/signin");
+    history.push("/");
     setToken("");
     setSearchMoviesResponse("");
     setFindMovies([]);
@@ -212,7 +255,7 @@ function App() {
   // const [findMovies, setFindMovies] = React.useState(
   //   JSON.parse(localStorage.getItem("findMovies"))
   // );
-  const [findMovies, setFindMovies] = React.useState([]);
+
 
   function submitSearch(query) {
     if (!query) {
@@ -241,7 +284,7 @@ function App() {
   function submitSaveSearch(query) {
     setTimeout(() => setIsLoading(false), 500);
     setSaveMovies(searchMovies(saveMovies, query));
-}
+  }
 
   function savedMovies() {
     auth
@@ -290,7 +333,8 @@ function App() {
       });
   }
 
-
+  // requestAnswer
+  const [authMessage, setAuthMessage] = React.useState("");
 
 
   function toggleMovieLike(movie, isLiked) {
@@ -299,9 +343,15 @@ function App() {
 
   function checkSavedMovie(movie) {
     return saveMovies.some(
-        (film) => film.movieId === movie.movieId 
-    );         
-}
+      (film) => film.movieId === movie.movieId
+      //   (film) => film.movieId === movie.movieId 
+      // (film) => film.movieId === movie.movieId
+      //   (film) => film.movieId === movie.movieId 
+      // (film) => film.movieId === movie.movieId
+      //   (film) => film.movieId === movie.movieId 
+      // (film) => film.movieId === movie.movieId
+    );
+  }
 
   // handeleSavedMovie();
   // setSaveMovies(data);
@@ -399,6 +449,10 @@ function App() {
     // }, [loggedIn, history])
   }, [loggedIn]);
 
+  // React.useEffect(() => {
+  //   // setAuthMessage('');
+  // },[handleUpdateUser, handleLogin, handleRegister]);
+
   React.useEffect(() => {
     checkToken();
   });
@@ -407,7 +461,7 @@ function App() {
   //   // setFindMovies([]);
   //   localStorage.setItem("findMovies", JSON.stringify(findMovies));
   // }, [findMovies]);
-  useEffect(() => {});
+  useEffect(() => { });
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -422,21 +476,26 @@ function App() {
 
           <Switch>
             <Route path="/signup">
-              <Register onSubmit={handleRegister} />
+              {loggedIn ? <Redirect to='/movies' /> :
+                <Register onSubmit={handleRegister} authMessage={authMessage} />
+              }
             </Route>
 
             <Route path="/signin">
-              <Login onSubmit={handleLogin} />
+              {loggedIn ? <Redirect to='/movies' /> :
+                <Login onSubmit={handleLogin} authMessage={authMessage} />
+              }
             </Route>
 
             <ProtectedRoute
-                        path="/profile"
-                        component={Profile}
-                        loggedIn={loggedIn}
-                        userData={currentUser}
-                        onUpdateUser={handleUpdateUser}
-                        onSignOut={handleSignOut}
-                    />
+              path="/profile"
+              component={Profile}
+              loggedIn={loggedIn}
+              userData={currentUser}
+              onUpdateUser={handleUpdateUser}
+              onSignOut={handleSignOut}
+              authMessage={authMessage}
+            />
 
             {/* <Route path="/profile">
               <Profile
@@ -447,7 +506,7 @@ function App() {
               />
             </Route> */}
 
-            <Route path="/movies">
+            {/* <Route path="/movies">
               <Movies
                 movies={findMovies}
                 // setSearch={setSearch}
@@ -457,12 +516,26 @@ function App() {
                 checkSavedMovie={checkSavedMovie}
                 searchMoviesResponse={searchMoviesResponse}
                 selectShortMovies={selectShortMovies}
-                
-                
-                // onSubmit={handleLogin}
+
+
+              // onSubmit={handleLogin}
               />
-            </Route>
-            <Route path="/saved-movies">
+            </Route> */}
+
+            <ProtectedRoute
+              path="/movies"
+              component={Movies}
+              loggedIn={loggedIn}
+              movies={findMovies}
+              onSubmitSearch={submitSearch}
+              isLoading={isLoading}
+              toggleMovieLike={toggleMovieLike}
+              checkSavedMovie={checkSavedMovie}
+              searchMoviesResponse={searchMoviesResponse}
+              selectShortMovies={selectShortMovies}
+            />
+
+            {/* <Route path="/saved-movies">
               <SavedMovies
                 // onSubmit={handleLogin}
                 // handeleSavedMovie={handeleSavedMovie}
@@ -473,30 +546,60 @@ function App() {
                 checkSavedMovie={checkSavedMovie}
                 searchMoviesResponse={searchMoviesResponse}
                 selectShortMovies={selectShortMovies}
-                
-              />
-            </Route>
 
-            <Route path="/error">
+              />
+            </Route> */}
+
+            <ProtectedRoute
+              path="/saved-movies"
+              component={SavedMovies}
+              loggedIn={loggedIn}
+              movies={saveMovies}
+              onSubmitSearch={submitSaveSearch}
+              isLoading={isLoading}
+              toggleMovieLike={toggleMovieLike}
+              checkSavedMovie={checkSavedMovie}
+              searchMoviesResponse={searchMoviesResponse}
+              selectShortMovies={selectShortMovies}
+            />
+
+            {/* <Route path="/error">
               <ErrorPage
               // onSubmit={handleRegister}
               />
-            </Route>
+            </Route> */}
 
-            <Route path="/">
+            <Route exact path="/">
               <Main />
               <Footer />
             </Route>
-          </Switch>
+            {/* </Switch> */}
+            <Route path="*">
+              {loggedIn ? <ErrorPage /> : <Redirect to='/' />}
+              {/* <ErrorPage /> */}
+            </Route>
 
+
+            <Route path="/(movies|saved-movies)">
+              <Footer />
+            </Route>
+            {/* </Switch> */}
+            {/* <Route path="*">
+              <ErrorPage
+              // onSubmit={handleRegister}
+              />
+            </Route> */}
+            {/* <Route path="*">
+              <ErrorPage />
+            </Route> */}
+          </Switch>
           <BurgerMenu
             isOpen={isBurgerMenuOpen}
             onCloseBurger={closeAllPopups}
           />
-
-          <Route path="/(movies|saved-movies)">
-            <Footer />
-          </Route>
+          {/* <Route>
+            {loggedIn ? <Redirect to='*' /> : <Redirect to='/error' />}
+          </Route> */}
         </div>
       </div>
     </CurrentUserContext.Provider>

@@ -1,19 +1,7 @@
 import React from "react";
-import { useForm } from "react-hook-form";
 import AuthForm from "../AuthForm/AuthForm";
 
-function Register({ onSubmit }) {
-  
-
-
-  // const {
-  //   register,
-  //   // handleSubmit,
-  //   formState: { errors, isValid },
-  // } = useForm({
-  //   mode: "onChange"
-  // });
-
+function Register({ onSubmit, authMessage }) {
 
   return (
     <AuthForm
@@ -23,11 +11,9 @@ function Register({ onSubmit }) {
       link="/signin"
       linkText="Войти"
       onSubmit={onSubmit}
-      // isValid={isValid}
       registration={true}
-    >
-      
-    </AuthForm>
+      authMessage={authMessage}
+    />
   );
 }
 

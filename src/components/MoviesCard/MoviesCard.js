@@ -3,7 +3,7 @@ import "./MoviesCard.css";
 import { useEffect } from "react";
 // import film from "../../images/film.png";
 
-function MoviesCard({ buttonLikeClass, movie, toggleMovieLike, checkSavedMovie, isPageAllMovies }) {
+function MoviesCard({ buttonLikeClass, movie, toggleMovieLike, checkSavedMovie }) {
   // const [isActive, setActive] = useState(false);
   const isLiked = checkSavedMovie(movie);
   let hour = Math.floor(movie.duration / 60);

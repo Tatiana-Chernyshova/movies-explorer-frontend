@@ -71,6 +71,15 @@
   justify-self: end;
 }
 
+.profile__message{
+  display: flex;
+  padding: 50px 0 0;
+  margin: 0 0 -61px;
+  font-size: 10px;
+  color: #ff4062;
+  justify-content: center;
+}
+
 .profile__buttons {
   margin: 210px 0 0;
   display: grid;
@@ -90,9 +99,14 @@
   transition: opacity 0.4s linear 0s;
 }
 
-.profile__btn:hover {
+.profile__btn:hover:enabled {
   opacity: 0.6;
 }
+
+.profile__btn:disabled {
+  cursor: default;
+}
+
 
 .profile__btn_red {
   color: #ff4062;

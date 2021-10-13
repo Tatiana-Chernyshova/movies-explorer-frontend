@@ -23,7 +23,7 @@ function Header({ isLoggin, onOpenBurger, onCloseBurger, isBurgerOpen }) {
           </a>
         </header>
       </Route>
-      <Route path="/">
+      <Route path="/(|movies|saved-movies|profile)">
         <header className={`header header_${isLoggin && "login"}`}>
           <a className="header__link" href="/" rel="noreferrer">
             <img
@@ -53,6 +53,10 @@ function Header({ isLoggin, onOpenBurger, onCloseBurger, isBurgerOpen }) {
             <Accessibility />
           )}
         </header>
+      </Route>
+      <Route path="*">
+        {/* <header className="header header_auth"> */}
+        {/* </header> */}
       </Route>
     </Switch>
   );
