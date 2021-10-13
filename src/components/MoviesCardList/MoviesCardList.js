@@ -8,8 +8,10 @@ function MoviesCardList({
   movies,
   toggleMovieLike,
   checkSavedMovie,
-  saveMovies,
   isPageAllMovies,
+
+  // TODO:
+  // saveMovies,
 }) {
   const [moreCards, setMoreCards] = React.useState(3);
   const [startIndex, setStartIndex] = React.useState(0);
@@ -45,14 +47,12 @@ function MoviesCardList({
     setMoreCards(sumCards.more);
   }
 
-  useEffect(
-    () => {
-      window.addEventListener("resize", handleResize);
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }
-  );
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  });
 
   useEffect(() => {
     const sumCards = getIndex();
@@ -62,32 +62,34 @@ function MoviesCardList({
     setStartIndex(endIndex);
   }, [movies]);
 
-  useEffect(() => {
-  }, [saveMovies]);
+  // TODO:
+  // useEffect(() => {
+  // }, [saveMovies]);
 
   return (
     <section className="movies-card-list">
       <div className="movies-card-list__box">
-        {isPageAllMovies && renderMovies.map((movie) => (
-          <MoviesCard
-            key={movie.movieId}
-            movie={movie}
-            toggleMovieLike={toggleMovieLike}
-            checkSavedMovie={checkSavedMovie}
-            buttonLikeClass={buttonLikeClass}
-          />
-        ))}
-        {!isPageAllMovies && movies.map((movie) => (
-          <MoviesCard
-            key={movie.movieId}
-            movie={movie}
-            toggleMovieLike={toggleMovieLike}
-            checkSavedMovie={checkSavedMovie}
-            buttonLikeClass={buttonLikeClass}
-          />
-        ))}
+        {isPageAllMovies &&
+          renderMovies.map((movie) => (
+            <MoviesCard
+              key={movie.movieId}
+              movie={movie}
+              toggleMovieLike={toggleMovieLike}
+              checkSavedMovie={checkSavedMovie}
+              buttonLikeClass={buttonLikeClass}
+            />
+          ))}
+        {!isPageAllMovies &&
+          movies.map((movie) => (
+            <MoviesCard
+              key={movie.movieId}
+              movie={movie}
+              toggleMovieLike={toggleMovieLike}
+              checkSavedMovie={checkSavedMovie}
+              buttonLikeClass={buttonLikeClass}
+            />
+          ))}
       </div>
-
       {isPageAllMovies && startIndex < movies.length && (
         <button
           type="submit"

@@ -16,7 +16,6 @@ class MoviesApi {
   
     
   _checkResponse(res) {
-    // console.log(res.json());
       if (res.ok) {
         return res.json();
       }
@@ -29,29 +28,7 @@ const api = new MoviesApi({
   address: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
   },
 })
 
 export default api;
-
-
-
-
-// export const getMovies = () => {
-//   return fetch(`${BASE_URL}`, {
-//     method: 'GET',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       // 'authorization': `Bearer ${token}`,
-//     }
-//   })
-//   .then(result => checkResponse(result));
-// };
-
-// function checkResponse(res) {
-//   if (res.ok) {
-//     return res.json();
-//   }
-//   return Promise.reject(`Ошибка: ${res.status}`);
-// }

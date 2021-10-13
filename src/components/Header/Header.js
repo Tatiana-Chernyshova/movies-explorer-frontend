@@ -36,11 +36,17 @@ function Header({ isLoggin, onOpenBurger, onCloseBurger, isBurgerOpen }) {
             <>
               {isMobile ? (
                 <>
-                {isBurgerOpen ? (
-                  <BurgerButton onClick={onCloseBurger} isOpen={isBurgerOpen} />
-                ) : (
-                  <BurgerButton onClick={onOpenBurger} isOpen={isBurgerOpen}/>
-                )}
+                  {isBurgerOpen ? (
+                    <BurgerButton
+                      onClick={onCloseBurger}
+                      isOpen={isBurgerOpen}
+                    />
+                  ) : (
+                    <BurgerButton
+                      onClick={onOpenBurger}
+                      isOpen={isBurgerOpen}
+                    />
+                  )}
                 </>
               ) : (
                 <>
@@ -54,10 +60,7 @@ function Header({ isLoggin, onOpenBurger, onCloseBurger, isBurgerOpen }) {
           )}
         </header>
       </Route>
-      <Route path="*">
-        {/* <header className="header header_auth"> */}
-        {/* </header> */}
-      </Route>
+      <Route path="*"></Route>
     </Switch>
   );
 }

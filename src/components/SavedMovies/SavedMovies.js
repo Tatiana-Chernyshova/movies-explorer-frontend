@@ -6,15 +6,15 @@ import Preloader from "../Preloader/Preloader";
 
 function SavedMovies({
   movies,
-  setSearch,
-  getAllMovies,
   onSubmitSearch,
   isLoading,
   toggleMovieLike,
   checkSavedMovie,
   searchMoviesResponse,
   selectShortMovies,
-  
+  // TODO:
+  // setSearch,
+  // getAllMovies,
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const [shortMovies, setShortMovies] = useState([]);
@@ -26,19 +26,8 @@ function SavedMovies({
   }, [isChecked, onSubmitSearch]);
 
   return (
-    // <>
-    //   <SearchForm />
-    //   <MoviesCardList
-    //     buttonLikeClass="card__like_delete"
-    //     saveMovies={saveMovies}
-    //     isPageAllMovies={false}
-    //   />
-    // </>
-
     <>
       <SearchForm
-        handleSearch={setSearch}
-        getAllMovies={getAllMovies}
         onSubmitSearch={onSubmitSearch}
         setIsChecked={setIsChecked}
       />
@@ -52,15 +41,10 @@ function SavedMovies({
       {!isLoading && !searchMoviesResponse && (
         <MoviesCardList
           movies={isChecked ? shortMovies : movies}
-          // movies={isChecked ? shortMovies : movies}
-          
-          searchMoviesResponse={searchMoviesResponse}
           isPageAllMovies={true}
           buttonLikeClass="card__like_delete"
           toggleMovieLike={toggleMovieLike}
           checkSavedMovie={checkSavedMovie}
-          // isLoading={isLoading}
-          // search={search}
         />
       )}
     </>

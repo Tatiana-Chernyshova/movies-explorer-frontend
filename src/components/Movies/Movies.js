@@ -6,8 +6,9 @@ import Preloader from "../Preloader/Preloader";
 
 function Movies({
   movies,
-  setSearch,
-  getAllMovies,
+  // TODO: 
+  // setSearch,
+  // getAllMovies,
   onSubmitSearch,
   isLoading,
   toggleMovieLike,
@@ -15,12 +16,6 @@ function Movies({
   selectShortMovies,
   checkSavedMovie,
 }) {
-  // const [search, setSearch] = useState("");
-  // function handleSearch(e) {
-  //   setSearch(e);
-  //   console.log(e);
-  // }
-
   const [isChecked, setIsChecked] = useState(false);
   const [shortMovies, setShortMovies] = useState([]);
 
@@ -29,14 +24,13 @@ function Movies({
       setShortMovies(selectShortMovies(movies));
     }
   }, [isChecked, onSubmitSearch]);
+
   useEffect(() => {
   }, [toggleMovieLike]);
 
   return (
     <>
       <SearchForm
-        handleSearch={setSearch}
-        getAllMovies={getAllMovies}
         onSubmitSearch={onSubmitSearch}
         setIsChecked={setIsChecked}
       />
@@ -50,14 +44,9 @@ function Movies({
       {!isLoading && !searchMoviesResponse && (
         <MoviesCardList
           movies={isChecked ? shortMovies : movies}
-          // movies={isChecked ? shortMovies : movies}
-          
-          searchMoviesResponse={searchMoviesResponse}
           isPageAllMovies={true}
           toggleMovieLike={toggleMovieLike}
           checkSavedMovie={checkSavedMovie}
-          // isLoading={isLoading}
-          // search={search}
         />
       )}
     </>
