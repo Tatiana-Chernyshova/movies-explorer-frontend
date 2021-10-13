@@ -7,4 +7,4 @@
 
 Мой сервер: https://api.cherduk-movies.nomoredomains.club
 
-Публичный IPv4: 62.84.115.70
+Публичный IPv4: 62.84.116.232
