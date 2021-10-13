@@ -377,11 +377,11 @@ function App() {
             <Route path="*">
               {loggedIn ? <ErrorPage /> : <Redirect to="/" />}
             </Route>
-
-            <Route path="/(movies|saved-movies)">
-              <Footer />
-            </Route>
           </Switch>
+
+          <Route path="/(movies|saved-movies)">
+            <Footer />
+          </Route>
 
           <BurgerMenu
             isOpen={isBurgerMenuOpen}
