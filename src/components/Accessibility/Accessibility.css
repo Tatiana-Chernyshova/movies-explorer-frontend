@@ -1,0 +1,44 @@
+.accessibility__links {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  grid-column-gap: 30px;
+}
+
+.accessibility__link {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 12px;
+  color: black;
+  border-radius: 3px;
+  min-height: 32px;
+  min-width: 76px;
+  transition: all 0.3s linear 0s;
+}
+
+.accessibility__link:hover {
+  opacity: 0.6;
+}
+
+.accessibility__link_black {
+  background-color: black;
+  color: white;
+}
+
+@media screen and (max-width: 450px) {
+  .accessibility__links {
+    grid-column-gap: 14px;
+  }
+  .accessibility__link {
+    font-size: 10px;
+    min-height: 26px;
+    min-width: 54px;
+  }
+}

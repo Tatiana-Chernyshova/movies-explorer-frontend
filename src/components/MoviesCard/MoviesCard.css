@@ -1,0 +1,110 @@
+.card__item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s linear 0s;
+}
+
+.card__item:hover {
+  opacity: 0.85;
+}
+
+.card__image {
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: 203px;
+  object-fit: cover;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.card__box {
+  margin: 0;
+  padding: 7px 16px 17px;
+  display: grid;
+  grid-template-areas: "caption like" "time .";
+  grid-template-columns: 1fr 30px;
+  grid-template-rows: min-content;
+  grid-row-gap: 10px;
+  align-items: center;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.card__caption {
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  grid-area: caption;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.card__time {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  line-height: 13px;
+  color: #a0a0a0;
+  grid-area: time;
+}
+
+.card__like {
+  grid-area: like;
+  margin: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0);
+  border: 0;
+  box-sizing: border-box;
+  min-width: 30px;
+  min-height: 30px;
+  background-repeat: no-repeat;
+  object-fit: contain;
+  transition: opacity 0.4s linear 0s;
+  justify-self: end;
+  cursor: pointer;
+}
+.card__like_disactive {
+  background-image: url("../../images/like-button_disactive.svg");
+}
+.card__like_active {
+  background-image: url("../../images/like-button_active.svg");
+}
+.card__item:hover .card__like_delete {
+  background-image: url("../../images/like-button_delete.svg");
+}
+
+@media screen and (max-width: 768px) {
+  .card__image {
+    height: 190px;
+  }
+  .card__box {
+    grid-template-columns: 1fr 30px;
+    grid-row-gap: 10px;
+    padding: 5px 14px 14px;
+    grid-row-gap: 9px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .card__item {
+    height: 237px;
+  }
+  .card__image {
+    height: 168px;
+  }
+  .card__box {
+    padding-right: 10px;
+    grid-row-gap: 7px;
+  }
+  .card__caption {
+    font-size: 12px;
+  }
+}
