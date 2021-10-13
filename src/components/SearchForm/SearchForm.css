@@ -78,12 +78,6 @@
   opacity: 0.6;
 }
 
-/* TODO: delete*/
-/* .search__submit:disabled {
-  opacity: 0.4;
-  cursor: default;
-} */
-
 @media screen and (max-width: 1279px) {
   .search__page {
     max-width: 752px;

@@ -12,9 +12,6 @@ function SavedMovies({
   checkSavedMovie,
   searchMoviesResponse,
   selectShortMovies,
-  // TODO:
-  // setSearch,
-  // getAllMovies,
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const [shortMovies, setShortMovies] = useState([]);

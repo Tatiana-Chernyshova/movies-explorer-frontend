@@ -3,8 +3,6 @@ import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import "./App.css";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import api from "../../utils/MoviesApi.js";
-// TODO:
-// import * as auth from "../../utils/MainApi";
 import {
   register,
   login,
@@ -123,8 +121,6 @@ function App() {
       setToken(token);
       getToken(token)
         .then((res) => {
-          // TODO:
-          // setCurrentUser(res);
           setLoggedIn(true);
         })
         .catch((e) => {
@@ -302,8 +298,6 @@ function App() {
         allMovies();
       }
     }
-    // TODO:
-    // }, [loggedIn, history])
   }, [loggedIn]);
 
   useEffect(() => {

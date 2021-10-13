@@ -6,9 +6,6 @@ import Preloader from "../Preloader/Preloader";
 
 function Movies({
   movies,
-  // TODO: 
-  // setSearch,
-  // getAllMovies,
   onSubmitSearch,
   isLoading,
   toggleMovieLike,

@@ -9,9 +9,6 @@ function MoviesCardList({
   toggleMovieLike,
   checkSavedMovie,
   isPageAllMovies,
-
-  // TODO:
-  // saveMovies,
 }) {
   const [moreCards, setMoreCards] = React.useState(3);
   const [startIndex, setStartIndex] = React.useState(0);
@@ -61,10 +58,6 @@ function MoviesCardList({
     setRenderMovies(movies.slice(0, endIndex));
     setStartIndex(endIndex);
   }, [movies]);
-
-  // TODO:
-  // useEffect(() => {
-  // }, [saveMovies]);
 
   return (
     <section className="movies-card-list">
