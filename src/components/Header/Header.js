@@ -1,5 +1,5 @@
 import "./Header.css";
-import { Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import headerLogo from "../../images/header-logo.svg";
 import Navigation from "../Navigation/Navigation";
@@ -14,24 +14,39 @@ function Header({ isLoggin, onOpenBurger, onCloseBurger, isBurgerOpen }) {
     <Switch>
       <Route path="/(signup|signin)">
         <header className="header header_auth">
-          <a className="header__link" href="/" rel="noreferrer">
+          <Link to="/" className="header__link">
+            {/* <img className="header__logo" src={logo} alt="Логотип проект" /> */}
             <img
               src={headerLogo}
               alt="Логотип Movies"
               className="header__logo"
             />
-          </a>
+          </Link>
+          {/* <a className="header__link" href="/" rel="noreferrer">
+            <img
+              src={headerLogo}
+              alt="Логотип Movies"
+              className="header__logo"
+            />
+          </a> */}
         </header>
       </Route>
       <Route path="/(|movies|saved-movies|profile)">
         <header className={`header header_${isLoggin && "login"}`}>
-          <a className="header__link" href="/" rel="noreferrer">
+          {/* <a className="header__link" href="/" rel="noreferrer">
             <img
               src={headerLogo}
               alt="Логотип Movies"
               className="header__logo"
             />
-          </a>
+          </a> */}
+          <Link to="/" className="header__link">
+            <img
+              src={headerLogo}
+              alt="Логотип Movies"
+              className="header__logo"
+            />
+          </Link>
           {isLoggin ? (
             <>
               {isMobile ? (

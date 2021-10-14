@@ -1,6 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import "./Profile.css";
 
@@ -15,11 +15,15 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, isDirty },
+    control,
+    	trigger,
+    formState: { errors, isValid, isDirty, dirtyFields },
   } = useForm({
     mode: "onChange",
     defaultValues: preloadedValues,
   });
+
+  // console.log(	trigger())
 
   return (
     <Route path="/profile">
@@ -36,7 +40,33 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
               <label className="profile__label" htmlFor="name">
                 Имя
               </label>
-              <input
+
+              <Controller
+                control={control}
+                name="name"
+                render={() => (
+                  <input
+                    type="text"
+                    className="profile__input"
+                    id="name"
+                    name="name"
+                    placeholder="Имя"
+                    {...register("name", {
+                      required: "Необходимо ввести имя",
+                      minLength: {
+                        value: 2,
+                        message: "Введите минимум 2 символа",
+                      },
+                      maxLength: {
+                        value: 30,
+                        message: "Максимальная длина имени - 30 символов",
+                      },
+                    })}
+                  />
+                )}
+              />
+
+              {/* <input
                 type="text"
                 className="profile__input"
                 id="name"
@@ -53,7 +83,8 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
                     message: "Максимальная длина имени - 30 символов",
                   },
                 })}
-              />
+              /> */}
+
               {errors.name && (
                 <span className="profile__error">{errors.name.message}</span>
               )}

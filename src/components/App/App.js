@@ -35,7 +35,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [saveMovies, setSaveMovies] = useState([]);
+  // const [saveMovies, setSaveMovies] = useState([]);
   const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchMoviesResponse, setSearchMoviesResponse] = useState("");
@@ -115,8 +115,7 @@ function App() {
   }
 
   function checkToken() {
-    setToken(localStorage.getItem("token"));
-
+    const token = localStorage.getItem("token");
     if (token) {
       setToken(token);
       getToken(token)
@@ -209,7 +208,7 @@ function App() {
       return;
     }
     setSearchMoviesResponse("");
-    allMovies();
+    // allMovies();
     setTimeout(() => setIsLoading(false), 500);
     setFindMovies(searchMovies(movies, query));
     localStorage.setItem(
@@ -218,7 +217,64 @@ function App() {
     );
   }
 
+  function submitSearchQQ(query) {
+    if (query) {
+      const movies = JSON.parse(localStorage.getItem("allMovies"));
+      if (!movies) {
+        allMovies();
+        // const jjj = JSON.parse(localStorage.getItem("allMovies"));
+        // setMovies(jjj);
+        setTimeout(
+          () => console.log(JSON.parse(localStorage.getItem("allMovies"))),
+          1000
+        );
+      }
+      // savedMovies();
+
+      // const moviesd = JSON.parse(localStorage.getItem("allMovies"));
+      // setMovies(moviesd);
+      // const searchResult = JSON.parse(localStorage.getItem("findMovies"));
+      // if (searchResult) {
+      //   setFindMovies(searchResult);
+      // } else {
+      // console.log("query");
+
+      // }
+      // }
+      // else {
+      // allMovies()
+      // setSearchMoviesResponse("");
+      // // allMovies();
+      // setTimeout(() => setIsLoading(false), 500);
+      // console.log(movies);
+      // setFindMovies(searchMovies(movies, query));
+      // localStorage.setItem(
+      //   "findMovies",
+      //   JSON.stringify(searchMovies(movies, query))
+      // );
+
+      // }
+
+      // console.log("query");
+      // setSearchMoviesResponse("");
+      // // allMovies();
+      // setTimeout(() => setIsLoading(false), 500);
+      // setFindMovies(searchMovies(movies, query));
+      // localStorage.setItem(
+      //   "findMovies",
+      //   JSON.stringify(searchMovies(movies, query))
+      // );
+    } else {
+      console.log("NOTquery");
+      localStorage.removeItem("findMovies");
+      setSearchMoviesResponse("Нужно ввести ключевое слово");
+      return;
+    }
+  }
+  const [saveMovies, setSaveMovies] = useState([]);
   function submitSaveSearch(query) {
+    setSaveMovies(JSON.parse(localStorage.getItem("allMovies")));
+
     setTimeout(() => setIsLoading(false), 500);
     setSaveMovies(searchMovies(saveMovies, query));
   }
@@ -254,7 +310,13 @@ function App() {
     const movieId = saveMovies.find((el) => el.movieId === movie.movieId)._id;
     deleteMovie(movieId)
       .then(() => {
-        savedMovies();
+        // savedMovies();
+
+        const newSavedMovies = saveMovies.filter(
+          (deleteEl) => deleteEl._id !== movieId,
+        );
+        setSaveMovies(newSavedMovies);
+        localStorage.setItem('saveMovies', JSON.stringify(newSavedMovies));
       })
       .catch((e) => {
         console.log(e);
@@ -272,8 +334,17 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
+      // console.log(token)
       return;
     } else {
+      // getUserData()
+      //   .then((userData) => {
+      //     setCurrentUser(userData);
+      //   })
+      //   .catch((e) => {
+      //     console.log(e);
+      //   });
+
       Promise.all([getUserData(), savedMovies()])
         .then(([userData, savedMoviesData]) => {
           setCurrentUser(userData);
@@ -288,7 +359,7 @@ function App() {
     if (loggedIn) {
       const movies = JSON.parse(localStorage.getItem("allMovies"));
       if (movies) {
-        savedMovies();
+        // savedMovies();
         setMovies(movies);
         const searchResult = JSON.parse(localStorage.getItem("findMovies"));
         if (searchResult) {
@@ -302,9 +373,9 @@ function App() {
 
   useEffect(() => {
     checkToken();
-  });
+  }, []);
 
-  useEffect(() => {});
+  // useEffect(() => {});
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -377,11 +448,11 @@ function App() {
             <Route path="*">
               {loggedIn ? <ErrorPage /> : <Redirect to="/" />}
             </Route>
-
-            <Route path="/(movies|saved-movies)">
-              <Footer />
-            </Route>
           </Switch>
+
+          <Route path="/(movies|saved-movies)">
+            <Footer />
+          </Route>
 
           <BurgerMenu
             isOpen={isBurgerMenuOpen}
