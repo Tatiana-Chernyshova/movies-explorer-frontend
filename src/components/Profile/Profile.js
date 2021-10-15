@@ -1,6 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import "./Profile.css";
 
@@ -15,15 +15,23 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
   const {
     register,
     handleSubmit,
-    control,
-    	trigger,
-    formState: { errors, isValid, isDirty, dirtyFields },
+    watch,
+    formState: { errors, isValid, isDirty },
   } = useForm({
     mode: "onChange",
     defaultValues: preloadedValues,
   });
+  const [isEdited, setIsEdited] = React.useState(false);
 
-  // console.log(	trigger())
+  React.useEffect(() => {
+    const inputName = watch("name");
+    if (name === inputName) {
+      setIsEdited(false);
+      return;
+    }
+    setIsEdited(true);
+    return;
+  });
 
   return (
     <Route path="/profile">
@@ -40,33 +48,7 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
               <label className="profile__label" htmlFor="name">
                 Имя
               </label>
-
-              <Controller
-                control={control}
-                name="name"
-                render={() => (
-                  <input
-                    type="text"
-                    className="profile__input"
-                    id="name"
-                    name="name"
-                    placeholder="Имя"
-                    {...register("name", {
-                      required: "Необходимо ввести имя",
-                      minLength: {
-                        value: 2,
-                        message: "Введите минимум 2 символа",
-                      },
-                      maxLength: {
-                        value: 30,
-                        message: "Максимальная длина имени - 30 символов",
-                      },
-                    })}
-                  />
-                )}
-              />
-
-              {/* <input
+              <input
                 type="text"
                 className="profile__input"
                 id="name"
@@ -83,8 +65,7 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
                     message: "Максимальная длина имени - 30 символов",
                   },
                 })}
-              /> */}
-
+              />
               {errors.name && (
                 <span className="profile__error">{errors.name.message}</span>
               )}
@@ -115,7 +96,10 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
               <span className="profile__message">{authMessage}</span>
             )}
             <div className="profile__buttons">
-              <button className="profile__btn" disabled={!isValid || !isDirty}>
+              <button
+                className="profile__btn"
+                disabled={!isValid || !isDirty || !isEdited}
+              >
                 Редактировать
               </button>
               <button
