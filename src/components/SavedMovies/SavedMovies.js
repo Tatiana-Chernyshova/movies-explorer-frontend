@@ -12,6 +12,7 @@ function SavedMovies({
   checkSavedMovie,
   searchMoviesResponse,
   selectShortMovies,
+  saveFilteredMovies,
 }) {
   const [isChecked, setIsChecked] = useState(false);
   const [shortMovies, setShortMovies] = useState([]);
@@ -24,10 +25,7 @@ function SavedMovies({
 
   return (
     <>
-      <SearchForm
-        onSubmitSearch={onSubmitSearch}
-        setIsChecked={setIsChecked}
-      />
+      <SearchForm onSubmitSearch={onSubmitSearch} setIsChecked={setIsChecked} />
       {isLoading && <Preloader />}
       {searchMoviesResponse && (
         <p className="movies__response">{searchMoviesResponse}</p>
@@ -35,15 +33,28 @@ function SavedMovies({
       {isChecked && movies.length !== 0 && shortMovies.length === 0 && (
         <p className="movies__response">Короткометражных фильмов не найдено</p>
       )}
-      {!isLoading && !searchMoviesResponse && (
-        <MoviesCardList
-          movies={isChecked ? shortMovies : movies}
-          isPageAllMovies={true}
-          buttonLikeClass="card__like_delete"
-          toggleMovieLike={toggleMovieLike}
-          checkSavedMovie={checkSavedMovie}
-        />
-      )}
+      {!isLoading &&
+        !searchMoviesResponse &&
+        saveFilteredMovies.length === 0 && (
+          <MoviesCardList
+            movies={isChecked ? shortMovies : movies}
+            isPageAllMovies={true}
+            buttonLikeClass="card__like_delete"
+            toggleMovieLike={toggleMovieLike}
+            checkSavedMovie={checkSavedMovie}
+          />
+        )}
+      {!isLoading &&
+        !searchMoviesResponse &&
+        saveFilteredMovies.length !== 0 && (
+          <MoviesCardList
+            movies={isChecked ? shortMovies : saveFilteredMovies}
+            isPageAllMovies={true}
+            buttonLikeClass="card__like_delete"
+            toggleMovieLike={toggleMovieLike}
+            checkSavedMovie={checkSavedMovie}
+          />
+        )}
     </>
   );
 }

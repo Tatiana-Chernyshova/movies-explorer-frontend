@@ -35,11 +35,12 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [saveMovies, setSaveMovies] = useState([]);
   const [token, setToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [searchMoviesResponse, setSearchMoviesResponse] = useState("");
   const [findMovies, setFindMovies] = useState([]);
+  const [saveMovies, setSaveMovies] = useState([]);
+  const [saveFilteredMovies, setSaveFilteredMovies] = useState([]);
   const [authMessage, setAuthMessage] = useState("");
 
   function handleIsBurgerMenuOpen() {
@@ -115,8 +116,7 @@ function App() {
   }
 
   function checkToken() {
-    setToken(localStorage.getItem("token"));
-
+    const token = localStorage.getItem("token");
     if (token) {
       setToken(token);
       getToken(token)
@@ -144,44 +144,6 @@ function App() {
     setSearchMoviesResponse("");
   }
 
-  function allMovies() {
-    setIsLoading(true);
-    api
-      .getMovies()
-      .then((moviesData) => {
-        const allFilms = moviesData.map((obj) => {
-          return {
-            country: obj.country ? obj.country : "none",
-            director: obj.director ? obj.director : "none",
-            duration: obj.duration,
-            year: obj.year ? obj.year : 0,
-            description: obj.description ? obj.description : "none",
-            image: `https://api.nomoreparties.co${obj.image.url}`,
-            trailer: obj.trailerLink
-              ? obj.trailerLink
-              : `https://www.youtube.com/`,
-            nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
-            nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
-            thumbnail: `https://api.nomoreparties.co${obj.image.formats.thumbnail.url}`,
-            movieId: obj.id,
-          };
-        });
-        setMovies(allFilms);
-        localStorage.setItem("allMovies", JSON.stringify(allFilms));
-      })
-      .catch((e) => {
-        setSearchMoviesResponse(
-          `Во время запроса произошла ошибка. 
-          Возможно, проблема с соединением или сервер недоступен. 
-          Подождите немного и попробуйте ещё раз`
-        );
-        console.log(e);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
   function searchMovies(movies, query) {
     const result = movies.filter((movie) => {
       return (
@@ -203,24 +165,68 @@ function App() {
   }
 
   function submitSearch(query) {
-    if (!query) {
+    if (query) {
+      const movies = JSON.parse(localStorage.getItem("allMovies"));
+      if (movies) {
+        setTimeout(() => setIsLoading(false), 500);
+        setFindMovies(searchMovies(movies, query));
+        localStorage.setItem(
+          "findMovies",
+          JSON.stringify(searchMovies(movies, query))
+        );
+      } else {
+        setIsLoading(true);
+        api
+          .getMovies()
+          .then((moviesData) => {
+            const allFilms = moviesData.map((obj) => {
+              return {
+                country: obj.country ? obj.country : "none",
+                director: obj.director ? obj.director : "none",
+                duration: obj.duration,
+                year: obj.year ? obj.year : 0,
+                description: obj.description ? obj.description : "none",
+                image: `https://api.nomoreparties.co${obj.image.url}`,
+                trailer: obj.trailerLink
+                  ? obj.trailerLink
+                  : `https://www.youtube.com/`,
+                nameRU: obj.nameRU ? obj.nameRU.trim() : obj.nameEN.trim(),
+                nameEN: obj.nameEN ? obj.nameEN.trim() : obj.nameRU.trim(),
+                thumbnail: `https://api.nomoreparties.co${obj.image.formats.thumbnail.url}`,
+                movieId: obj.id,
+              };
+            });
+            setMovies(allFilms);
+            localStorage.setItem("allMovies", JSON.stringify(allFilms));
+            setFindMovies(searchMovies(allFilms, query));
+            localStorage.setItem(
+              "findMovies",
+              JSON.stringify(searchMovies(allFilms, query))
+            );
+          })
+          .catch((e) => {
+            setSearchMoviesResponse(
+              `Во время запроса произошла ошибка. 
+              Возможно, проблема с соединением или сервер недоступен. 
+              Подождите немного и попробуйте ещё раз`
+            );
+            console.log(e);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    } else {
+      console.log("NOTquery");
       localStorage.removeItem("findMovies");
       setSearchMoviesResponse("Нужно ввести ключевое слово");
       return;
     }
-    setSearchMoviesResponse("");
-    allMovies();
-    setTimeout(() => setIsLoading(false), 500);
-    setFindMovies(searchMovies(movies, query));
-    localStorage.setItem(
-      "findMovies",
-      JSON.stringify(searchMovies(movies, query))
-    );
   }
 
   function submitSaveSearch(query) {
     setTimeout(() => setIsLoading(false), 500);
-    setSaveMovies(searchMovies(saveMovies, query));
+    setSaveFilteredMovies(searchMovies(saveMovies, query));
   }
 
   function savedMovies() {
@@ -254,7 +260,15 @@ function App() {
     const movieId = saveMovies.find((el) => el.movieId === movie.movieId)._id;
     deleteMovie(movieId)
       .then(() => {
-        savedMovies();
+        const newSavedMovies = saveMovies.filter(
+          (deleteEl) => deleteEl._id !== movieId
+        );
+        setSaveMovies(newSavedMovies);
+        localStorage.setItem("saveMovies", JSON.stringify(newSavedMovies));
+        const newSavedMoviesFilter = saveFilteredMovies.filter(
+          (deleteEl) => deleteEl._id !== movieId
+        );
+        setSaveFilteredMovies(newSavedMoviesFilter);
       })
       .catch((e) => {
         console.log(e);
@@ -282,29 +296,19 @@ function App() {
           console.log(e);
         });
     }
-  }, [loggedIn]);
-
+  }, [loggedIn, history]);
+  
   useEffect(() => {
-    if (loggedIn) {
-      const movies = JSON.parse(localStorage.getItem("allMovies"));
-      if (movies) {
-        savedMovies();
-        setMovies(movies);
-        const searchResult = JSON.parse(localStorage.getItem("findMovies"));
-        if (searchResult) {
-          setFindMovies(searchResult);
-        }
-      } else {
-        allMovies();
-      }
+    const findFilms = JSON.parse(localStorage.getItem("findMovies"));
+    if (findFilms) {
+      setFindMovies(JSON.parse(localStorage.getItem("findMovies")));
     }
+    return;
   }, [loggedIn]);
 
   useEffect(() => {
     checkToken();
-  });
-
-  useEffect(() => {});
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -361,6 +365,7 @@ function App() {
               component={SavedMovies}
               loggedIn={loggedIn}
               movies={saveMovies}
+              saveFilteredMovies={saveFilteredMovies}
               onSubmitSearch={submitSaveSearch}
               isLoading={isLoading}
               toggleMovieLike={toggleMovieLike}
@@ -374,9 +379,7 @@ function App() {
               <Footer />
             </Route>
 
-            <Route path="*">
-              {loggedIn ? <ErrorPage /> : <Redirect to="/" />}
-            </Route>
+            <Route path="*">{loggedIn && <ErrorPage />}</Route>
           </Switch>
 
           <Route path="/(movies|saved-movies)">

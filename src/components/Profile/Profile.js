@@ -15,10 +15,22 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isValid, isDirty },
   } = useForm({
     mode: "onChange",
     defaultValues: preloadedValues,
+  });
+  const [isEdited, setIsEdited] = React.useState(false);
+
+  React.useEffect(() => {
+    const inputName = watch("name");
+    if (name === inputName) {
+      setIsEdited(false);
+      return;
+    }
+    setIsEdited(true);
+    return;
   });
 
   return (
@@ -84,7 +96,10 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
               <span className="profile__message">{authMessage}</span>
             )}
             <div className="profile__buttons">
-              <button className="profile__btn" disabled={!isValid || !isDirty}>
+              <button
+                className="profile__btn"
+                disabled={!isValid || !isDirty || !isEdited}
+              >
                 Редактировать
               </button>
               <button
