@@ -21,15 +21,24 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
     mode: "onChange",
     defaultValues: preloadedValues,
   });
-  const [isEdited, setIsEdited] = React.useState(false);
-
+  const [isEditedName, setIsEditedName] = React.useState(false);
+  const [isEditedEmail, setIsEditedEmail] = React.useState(false);
   React.useEffect(() => {
     const inputName = watch("name");
     if (name === inputName) {
-      setIsEdited(false);
+      setIsEditedName(false);
       return;
     }
-    setIsEdited(true);
+    setIsEditedName(true);
+    return;
+  });
+  React.useEffect(() => {
+    const inputEmail = watch("email");
+    if (email === inputEmail) {
+      setIsEditedEmail(false);
+      return;
+    }
+    setIsEditedEmail(true);
     return;
   });
 
@@ -98,7 +107,7 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
             <div className="profile__buttons">
               <button
                 className="profile__btn"
-                disabled={!isValid || !isDirty || !isEdited}
+                disabled={!isValid || !isDirty || !isEditedName || !isEditedEmail}
               >
                 Редактировать
               </button>
