@@ -107,7 +107,7 @@ function Profile({ onUpdateUser, onSignOut, authMessage }) {
             <div className="profile__buttons">
               <button
                 className="profile__btn"
-                disabled={!isValid || !isDirty || !isEditedName || !isEditedEmail}
+                disabled={!isValid || (!isEditedName && !isEditedEmail)}
               >
                 Редактировать
               </button>
