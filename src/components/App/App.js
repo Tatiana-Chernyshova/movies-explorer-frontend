@@ -145,6 +145,7 @@ function App() {
   }
 
   function searchMovies(movies, query) {
+    setSearchMoviesResponse("");
     const result = movies.filter((movie) => {
       return (
         movie.nameRU.toLowerCase().includes(query.toLowerCase()) ||
@@ -217,7 +218,6 @@ function App() {
           });
       }
     } else {
-      console.log("NOTquery");
       localStorage.removeItem("findMovies");
       setSearchMoviesResponse("Нужно ввести ключевое слово");
       return;
