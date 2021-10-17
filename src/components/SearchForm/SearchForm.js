@@ -1,39 +1,58 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import searchIcon from "../../images/icon__seach.svg";
 
-function SearchForm() {
-  const [name, setName] = React.useState("");
+function SearchForm({
+  onSubmitSearch,
+  setIsChecked,
+}) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onSubmit",
+  });
 
-  function submit(e) {
-    e.preventDefault();
-  }
-
-  function handleChangeName(e) {
-    setName(e.target.value);
+  function onSubmit(e) {
+    onSubmitSearch(e.query);
   }
 
   return (
     <article className="search__page">
       <div className="search__box">
-        <form className="search" name="search" onSubmit={submit}>
+        <form
+          className="search"
+          name="search"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
           <fieldset className="search__input-container">
             <img src={searchIcon} alt="Лупа" className="search__icon" />
             <input
               type="text"
               className="search__input"
-              id="film"
-              name="film"
+              id="query"
+              name="query"
               placeholder="Фильм"
-              // value={email || ''}
-              value={name || ""}
-              required
-              // onChange={handleEmailChange}
-              minLength="5"
-              onChange={handleChangeName}
+              {...register("query", {
+                minLength: {
+                  value: 2,
+                  message: "Введите минимум 2 символа",
+                },
+                maxLength: {
+                  value: 60,
+                  message: "Максимальная длина - 60 символов",
+                },
+              })}
             />
-            <span className="film-error search__input-error"></span>
+            {errors.query && (
+              <span className="query-error search__input-error">
+                {errors.query.message}
+              </span>
+            )}
             <button
               type="submit"
               className="search__submit"
@@ -43,7 +62,7 @@ function SearchForm() {
             </button>
           </fieldset>
         </form>
-        <FilterCheckbox />
+        <FilterCheckbox setIsChecked={setIsChecked} />
       </div>
     </article>
   );
