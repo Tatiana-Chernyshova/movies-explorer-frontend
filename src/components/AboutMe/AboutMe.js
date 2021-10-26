@@ -7,15 +7,15 @@ function AboutMe() {
       <h2 className="about-me__component">Студент</h2>
       <div className="about-me__box">
         <div className="about-me__text-box">
-          <h3 className="about-me__name">Владимир</h3>
-          <p className="about-me__profession">Ищу себя 31 год</p>
+          <h3 className="about-me__name">Татьяна</h3>
+          <p className="about-me__profession">Инженер, 28 лет</p>
           <p className="about-me__about">
-            Я работаю курьером в Яндекс.Еда. Год назад проходил конкурс на
+            Мой муж работает курьером в Яндекс.Еда. Год назад проходил конкурс на
             возможность обучения профессии веб-разработчика в Яндекс.Практикуме.
-            И вот мне выпал счастливый билет.
+            И вот нам выпал счастливый билет.
           </p>
           <span className="about-me__about">
-            Так же, я закончил СПбГУКиТ по специальности инженер систем кино и
+            Так же, я закончила СПбГУКиТ по специальности инженер систем кино и
             телевидения.
           </span>
         </div>
